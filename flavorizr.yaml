@@ -1,0 +1,24 @@
+flavors:
+  dev:
+    app:
+      name: "Dev Executive Gps"
+    android:
+      applicationId: "com.example.executive_gps.dev"
+      firebase:
+        config: ".firebase/flavors/dev/google-services.json"
+    ios:
+      bundleId: "com.example.executive_gps.dev"
+      firebase:
+        config: ".firebase/flavors/dev/GoogleService-Info.plist"
+
+  prod:
+    app:
+      name: "Executive Gps"
+    android:
+      applicationId: "com.example.executive_gps.prod"
+      firebase:
+        config: ".firebase/flavors/prod/google-services.json"
+    ios:
+      bundleId: "com.example.executive_gps.prod"
+      firebase:
+        config: ".firebase/flavors/prod/GoogleService-Info.plist"
