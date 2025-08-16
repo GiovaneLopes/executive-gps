@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
-          backgroundColor: AppColors.greyBackground,
+          backgroundColor: AppColors.white,
           appBar: HomeAppBar(scaffoldKey: scaffoldKey),
           drawer: const HomeDrawer(),
           floatingActionButton: const HomeFloatingActionButton(),
@@ -31,11 +31,13 @@ class HomePage extends StatelessWidget {
           body: Center(
             child: Column(
               children: [
-                state.currentTab == 0
-                    ? const ActivitiesContent()
-                    : state.currentTab == 1
-                        ? const ClientsContent()
-                        : const EmployeesContent(),
+                Expanded(
+                  child: state.currentTab == 0
+                      ? const ActivitiesContent()
+                      : state.currentTab == 1
+                          ? const ClientsContent()
+                          : const EmployeesContent(),
+                ),
               ],
             ),
           ),
