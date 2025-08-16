@@ -24,6 +24,16 @@ class _SignInPageState extends State<SignInPage> {
   final formKey = GlobalKey<FormState>();
   final bloc = Modular.get<AuthBloc>();
 
+  void onDone() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (formKey.currentState?.validate() ?? false) {
+      bloc.signIn(
+        emailController.text,
+        passwordController.text,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +88,8 @@ class _SignInPageState extends State<SignInPage> {
                           prefixIcon: Icons.email_outlined,
                           controller: emailController,
                           validator: InputValidators.validateEmail,
+                          onEditingComplete:
+                              FocusManager.instance.primaryFocus?.nextFocus,
                         ),
                         SizedBox(height: 12.h),
                         CustomTextFormField(
@@ -96,6 +108,7 @@ class _SignInPageState extends State<SignInPage> {
                           obscureText: state.obscurePassword,
                           controller: passwordController,
                           validator: InputValidators.validatePassword,
+                          onEditingComplete: onDone,
                         ),
                         SizedBox(height: 12.h),
                         Row(
@@ -127,15 +140,7 @@ class _SignInPageState extends State<SignInPage> {
                                       borderRadius: BorderRadius.circular(8.r),
                                     ),
                                   ),
-                                  onPressed: () {
-                                    if (formKey.currentState?.validate() ??
-                                        false) {
-                                      bloc.signIn(
-                                        emailController.text,
-                                        passwordController.text,
-                                      );
-                                    }
-                                  },
+                                  onPressed: onDone,
                                   child: state.status == AuthStatus.loading
                                       ? SizedBox(
                                           width: 20.w,

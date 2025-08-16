@@ -11,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool obscureText;
   final TextEditingController? controller;
+  final VoidCallback? onEditingComplete;
   const CustomTextFormField({
     super.key,
     this.labelText,
@@ -21,6 +22,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.obscureText = false,
     this.controller,
+    this.onEditingComplete,
   });
 
   @override
@@ -31,7 +33,10 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText,
       cursorColor: AppColors.primary,
       validator: validator,
-      style: Styles.bodyLight.copyWith(color: AppColors.white),
+      onEditingComplete: onEditingComplete,
+      style: Styles.bodyLight.copyWith(
+        color: AppColors.white,
+      ),
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,

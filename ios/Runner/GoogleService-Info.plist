@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCtPYRq8xunQNfUkQWc6AxLXZYmkjgU_Hs</string>
+	<string>AIzaSyCaVIwCCa_lShKshDJBrEX4o_EOFb0Sy-c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>648397175808</string>
+	<string>536161130967</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.executiveGps</string>
+	<string>com.example.executiveGps.dev</string>
 	<key>PROJECT_ID</key>
-	<string>executive-gps-prod</string>
+	<string>executive-gps-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>executive-gps-prod.firebasestorage.app</string>
+	<string>executive-gps-dev.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:648397175808:ios:a6adda556b60a4cf542ce5</string>
+	<string>1:536161130967:ios:5c98b1860fcd3e677dd392</string>
 </dict>
 </plist>
