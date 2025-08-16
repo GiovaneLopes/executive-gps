@@ -7,11 +7,17 @@ import 'package:executive_gps/modules/auth/pages/splash_page.dart';
 
 class AppModule extends Module {
   @override
-  List<Module> get imports => [AuthModule()];
+  List<Module> get imports => [
+        AuthModule(),
+        HomeModule(),
+        ];
 
   @override
   void routes(r) {
-    r.child('/', child: (context) => const SplashPage());
+    r.child(
+      '/',
+      child: (context) => const SplashPage(),
+    );
     r.module(
       AuthRoutes.splash.module,
       module: AuthModule(),
