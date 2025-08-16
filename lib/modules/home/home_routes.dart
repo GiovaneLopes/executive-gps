@@ -7,5 +7,5 @@ class HomeRoutes extends AppRoute {
 
   HomeRoutes(this.name, {this.type}) : super(module: '/home');
 
-  static final home = HomeRoutes('/');
+  static final home = HomeRoutes('/',type: NavigatorType.pushReplacement);
 }
