@@ -5,7 +5,7 @@ import 'package:executive_gps/modules/home/home_routes.dart';
 import 'package:executive_gps/modules/auth/auth_routes.dart';
 import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/modules/shared/utils/app_route.dart';
-import 'package:executive_gps/libs/modules/user/models/user_model.dart';
+import 'package:executive_gps/libs/modules/employees/models/employee_model.dart';
 import 'package:executive_gps/libs/modules/user/repositories/user_repository.dart';
 
 part './auth_state.dart';
@@ -27,11 +27,12 @@ class AuthBloc extends Cubit<AuthState> {
 
   void init() async {
     try {
-      await Future.delayed(const Duration(seconds: 3));
       final user = await repository.getCurrentUser();
+
       emit(
         state.copyWith(
           route: user != null ? HomeRoutes.home : AuthRoutes.signIn,
+          user: () => user,
           status: user != null
               ? AuthStatus.authenticated
               : AuthStatus.unauthenticated,
@@ -49,6 +50,7 @@ class AuthBloc extends Cubit<AuthState> {
       emit(
         state.copyWith(
           route: user != null ? HomeRoutes.home : AuthRoutes.signIn,
+          user: () => user,
           status: user != null
               ? AuthStatus.authenticated
               : AuthStatus.unauthenticated,

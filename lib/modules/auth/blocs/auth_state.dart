@@ -2,7 +2,7 @@ part of './auth_bloc.dart';
 
 class AuthState extends Equatable {
   final AppRoute? route;
-  final UserModel? user;
+  final EmployeeModel? user;
   final AuthStatus status;
   final bool obscurePassword;
   final AppError? error;
@@ -16,7 +16,7 @@ class AuthState extends Equatable {
 
   AuthState copyWith({
     AppRoute? route,
-    UserModel? Function()? user,
+    EmployeeModel? Function()? user,
     AuthStatus? status,
     bool? obscurePassword,
     AppError? error,

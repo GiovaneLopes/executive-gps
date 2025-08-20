@@ -1,1 +1,59 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"executive-gps-prod","appId":"1:648397175808:android:87f48ade737ba931542ce5","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"executive-gps-prod","appId":"1:648397175808:ios:a6adda556b60a4cf542ce5","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"executive-gps-prod","configurations":{"android":"1:648397175808:android:87f48ade737ba931542ce5","ios":"1:648397175808:ios:a6adda556b60a4cf542ce5"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "executive-gps-prod",
+          "appId": "1:648397175808:android:87f48ade737ba931542ce5",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "executive-gps-prod",
+          "appId": "1:648397175808:ios:a6adda556b60a4cf542ce5",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "executive-gps-prod",
+          "configurations": {
+            "android": "1:648397175808:android:87f48ade737ba931542ce5",
+            "ios": "1:648397175808:ios:a6adda556b60a4cf542ce5"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}

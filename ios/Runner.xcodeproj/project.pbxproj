@@ -10,10 +10,7 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		5297CE09DAE8B46EEC423C21 /* devProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 22780DA95E8D82B1C24DFB98 /* devProfile.xcconfig */; };
-		57214C9A8053D53F9D6F4D29 /* prodRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 44D01048162DF46E0DBFC932 /* prodRelease.xcconfig */; };
 		5E8FE197102B12E1B1E925EE /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9388F45647EB5A8D23DC86B4 /* Pods_Runner.framework */; };
-		6C32F2C6A2B636E209197C90 /* devDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8C09262AC5010D97D3A17F7A /* devDebug.xcconfig */; };
 		6EA0E1F64DAFEA640D6A1186 /* prodLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F9D51C569A759B69764AAF8C /* prodLaunchScreen.storyboard */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -21,10 +18,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		B4C0A554E30B55809075154E /* devLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2AF9D7350607A53FDC89E3FC /* devLaunchScreen.storyboard */; };
 		C604D38237FEFE45EA74A455 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4A9C0D39C7F3F9EF5349481F /* GoogleService-Info.plist */; };
-		D0DB1783B98370449A6FF36C /* prodDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B2C7BF59045A1828BB009E53 /* prodDebug.xcconfig */; };
-		E76D2C3B6C62652ED915DE25 /* devRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BA03B8B6966EF25EFB464852 /* devRelease.xcconfig */; };
 		E957F67D6C3A2986B1B62E53 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7520A24D702B8C566629C842 /* Pods_RunnerTests.framework */; };
-		E9AA87E1D6638EB5055214D8 /* prodProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 337F621193E8DCED7E4CAEEF /* prodProfile.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -315,12 +309,6 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				6C32F2C6A2B636E209197C90 /* devDebug.xcconfig in Resources */,
-				5297CE09DAE8B46EEC423C21 /* devProfile.xcconfig in Resources */,
-				E76D2C3B6C62652ED915DE25 /* devRelease.xcconfig in Resources */,
-				D0DB1783B98370449A6FF36C /* prodDebug.xcconfig in Resources */,
-				E9AA87E1D6638EB5055214D8 /* prodProfile.xcconfig in Resources */,
-				57214C9A8053D53F9D6F4D29 /* prodRelease.xcconfig in Resources */,
 				B4C0A554E30B55809075154E /* devLaunchScreen.storyboard in Resources */,
 				6EA0E1F64DAFEA640D6A1186 /* prodLaunchScreen.storyboard in Resources */,
 				C604D38237FEFE45EA74A455 /* GoogleService-Info.plist in Resources */,
@@ -541,7 +529,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -604,7 +592,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -763,7 +751,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -841,7 +829,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -892,7 +880,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -1000,7 +988,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1135,7 +1123,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1213,7 +1201,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1291,7 +1279,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

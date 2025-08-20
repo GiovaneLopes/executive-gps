@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:executive_gps/modules/home/blocs/home_bloc.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
+import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
 
 class HomeFloatingActionButton extends StatelessWidget {
   const HomeFloatingActionButton({super.key});
@@ -30,9 +31,7 @@ class HomeFloatingActionButton extends StatelessWidget {
                 const SnackBar(content: Text('Client Action Button Pressed')),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Employee Action Button Pressed')),
-              );
+              Modular.get<EmployeeBloc>().selectEmployee(null);
             }
           },
           child: const Icon(
