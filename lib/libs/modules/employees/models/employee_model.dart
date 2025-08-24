@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
 import 'package:executive_gps/libs/modules/address/models/address_model.dart';
 
 part 'employee_model.g.dart';
@@ -14,6 +15,7 @@ class EmployeeModel extends Equatable {
   final String cpf;
   final AddressModel address;
   final bool isAdmin;
+  final List<ImageModel> images;
 
   const EmployeeModel({
     this.id,
@@ -24,6 +26,7 @@ class EmployeeModel extends Equatable {
     required this.cpf,
     required this.address,
     this.isAdmin = false,
+    this.images = const [],
   });
 
   EmployeeModel copyWith({
@@ -35,6 +38,7 @@ class EmployeeModel extends Equatable {
     String? cpf,
     AddressModel? address,
     bool? isAdmin,
+    List<ImageModel>? images,
   }) {
     return EmployeeModel(
       id: id ?? this.id,
@@ -45,6 +49,7 @@ class EmployeeModel extends Equatable {
       cpf: cpf ?? this.cpf,
       address: address ?? this.address,
       isAdmin: isAdmin ?? this.isAdmin,
+      images: images ?? this.images,
     );
   }
 
@@ -62,5 +67,6 @@ class EmployeeModel extends Equatable {
         cpf,
         address,
         isAdmin,
+        images,
       ];
 }

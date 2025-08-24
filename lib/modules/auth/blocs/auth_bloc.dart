@@ -22,10 +22,10 @@ enum AuthStatus {
 class AuthBloc extends Cubit<AuthState> {
   final UserRepository repository;
   AuthBloc(this.repository) : super(const AuthState()) {
-    init();
+    getUser();
   }
 
-  void init() async {
+  void getUser() async {
     try {
       final user = await repository.getCurrentUser();
 

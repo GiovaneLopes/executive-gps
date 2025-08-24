@@ -16,6 +16,10 @@ EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
       cpf: json['cpf'] as String,
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
       isAdmin: json['isAdmin'] as bool? ?? false,
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
@@ -28,4 +32,5 @@ Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
       'cpf': instance.cpf,
       'address': instance.address.toJson(),
       'isAdmin': instance.isAdmin,
+      'images': instance.images.map((e) => e.toJson()).toList(),
     };

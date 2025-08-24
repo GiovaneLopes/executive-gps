@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,13 +45,17 @@ class HomeDrawer extends StatelessWidget {
                       Row(
                         children: [
                           Expanded(
-                            child: AutoSizeText(
-                              'Olá, ${Modular.get<AuthBloc>().state.user?.name ?? 'Usuário'}',
-                              maxLines: 1,
-                              style: Styles.bodyMedium.copyWith(
-                                color: AppColors.black,
-                              ),
-                            ),
+                            child: BlocBuilder<AuthBloc, AuthState>(
+                                bloc: Modular.get<AuthBloc>(),
+                                builder: (context, state) {
+                                  return AutoSizeText(
+                                    'Olá, ${state.user?.name ?? 'Usuário'}',
+                                    maxLines: 1,
+                                    style: Styles.bodyMedium.copyWith(
+                                      color: AppColors.black,
+                                    ),
+                                  );
+                                }),
                           ),
                         ],
                       ),
@@ -70,8 +75,11 @@ class HomeDrawer extends StatelessWidget {
               color: AppColors.black,
             ),
             onTap: () {
-              Modular.get<EmployeeBloc>()
-                  .selectEmployee(Modular.get<AuthBloc>().state.user);
+              Modular.get<EmployeeBloc>().selectEmployee(
+                  Modular.get<EmployeeBloc>().state.employees.firstWhere(
+                        (emp) =>
+                            emp.id == Modular.get<AuthBloc>().state.user?.id,
+                      ));
             },
           ),
           const Divider(),

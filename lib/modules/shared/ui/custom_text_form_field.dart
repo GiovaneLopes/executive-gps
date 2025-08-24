@@ -15,6 +15,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final int? maxLength;
+  final int maxLines;
   final bool obscureText;
   final bool loading;
   final bool enabled;
@@ -33,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.inputFormatters,
     this.maxLength,
+    this.maxLines = 1,
     this.obscureText = false,
     this.loading = false,
     this.enabled = true,
@@ -54,6 +56,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.inputFormatters,
     this.maxLength,
+    this.maxLines = 1,
     this.obscureText = false,
     this.loading = false,
     this.enabled = true,
@@ -74,6 +77,7 @@ class CustomTextFormField extends StatelessWidget {
       onEditingComplete: onEditingComplete,
       onChanged: onChanged,
       enabled: enabled,
+      maxLines: maxLines,
       style: Styles.bodyLight.copyWith(
         color: textColor,
       ),

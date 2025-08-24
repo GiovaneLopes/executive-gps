@@ -7,4 +7,5 @@ class EmployeeRoutes extends AppRoute {
   EmployeeRoutes(this.name, {this.type}) : super(module: '/employees');
 
   static final add = EmployeeRoutes('/add');
+  static final imageDetails = EmployeeRoutes('/image-details');
 }
