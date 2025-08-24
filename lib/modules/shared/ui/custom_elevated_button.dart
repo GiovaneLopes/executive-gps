@@ -4,11 +4,11 @@ import 'package:executive_gps/modules/shared/resources/styles.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  final String? label;
+  final String label;
   final VoidCallback? onPressed;
   final bool loading;
   const CustomElevatedButton(
-      {super.key, this.label, this.onPressed, this.loading = false});
+      {super.key, required this.label, this.onPressed, this.loading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class CustomElevatedButton extends StatelessWidget {
                         color: AppColors.black,
                       ))
                   : Text(
-                      'Entrar',
+                      label,
                       style: Styles.bodyMedium.copyWith(
                         color: AppColors.black,
                       ),

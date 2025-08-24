@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:executive_gps/modules/shared/resources/images.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
@@ -31,10 +35,15 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          Text(
-            'Bem-vindo, Everton Angelo!',
-            style: Styles.bodyMedium.copyWith(color: AppColors.white),
-          )
+          BlocBuilder<AuthBloc, AuthState>(
+              bloc: Modular.get<AuthBloc>(),
+              builder: (context, state) {
+                return AutoSizeText(
+                  'Bem-vindo, ${state.user?.name ?? 'Usuário'}!',
+                  maxLines: 2,
+                  style: Styles.bodyMedium.copyWith(color: AppColors.white),
+                );
+              })
         ],
       ),
       automaticallyImplyLeading: false,

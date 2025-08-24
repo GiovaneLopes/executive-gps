@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:executive_gps/modules/home/blocs/home_bloc.dart';
 import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
+import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
@@ -38,11 +42,22 @@ class HomeDrawer extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 14.h),
-                      Text(
-                        'Olá, Everton Angelo',
-                        style: Styles.bodyMedium.copyWith(
-                          color: AppColors.black,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: BlocBuilder<AuthBloc, AuthState>(
+                                bloc: Modular.get<AuthBloc>(),
+                                builder: (context, state) {
+                                  return AutoSizeText(
+                                    'Olá, ${state.user?.name ?? 'Usuário'}',
+                                    maxLines: 1,
+                                    style: Styles.bodyMedium.copyWith(
+                                      color: AppColors.black,
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -60,7 +75,11 @@ class HomeDrawer extends StatelessWidget {
               color: AppColors.black,
             ),
             onTap: () {
-              Navigator.pop(context);
+              Modular.get<EmployeeBloc>().selectEmployee(
+                  Modular.get<EmployeeBloc>().state.employees.firstWhere(
+                        (emp) =>
+                            emp.id == Modular.get<AuthBloc>().state.user?.id,
+                      ));
             },
           ),
           const Divider(),
@@ -77,6 +96,7 @@ class HomeDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Modular.get<AuthBloc>().logout();
+                Modular.get<HomeBloc>().clear();
                 Modular.to.popUntil((route) => route.isFirst);
               },
             ),

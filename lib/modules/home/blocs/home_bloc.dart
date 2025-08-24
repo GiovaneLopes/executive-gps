@@ -23,4 +23,8 @@ class HomeBloc extends Cubit<HomeState> {
   void refreshHomeData() {
     emit(state.copyWith());
   }
+
+  void clear() {
+    emit(const HomeState());
+  }
 }
