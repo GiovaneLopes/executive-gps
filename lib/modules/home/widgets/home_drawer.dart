@@ -30,13 +30,13 @@ class HomeDrawer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 72.w,
-                        height: 72.w,
+                        width: 45.w,
+                        height: 45.w,
                         child: const CircleAvatar(
                           backgroundColor: AppColors.primaryDark,
                           child: Icon(
                             FeatherIcons.user,
-                            size: 40,
+                            size: 28,
                             color: AppColors.black,
                           ),
                         ),
@@ -50,9 +50,10 @@ class HomeDrawer extends StatelessWidget {
                                 builder: (context, state) {
                                   return AutoSizeText(
                                     'Olá, ${state.user?.name ?? 'Usuário'}',
+                                    minFontSize: 6,
                                     maxLines: 1,
-                                    style: Styles.bodyMedium.copyWith(
-                                      color: AppColors.black,
+                                    style: Styles.body.copyWith(
+                                      color: AppColors.black,   
                                     ),
                                   );
                                 }),
