@@ -4,6 +4,8 @@ import 'package:executive_gps/modules/home/home_module.dart';
 import 'package:executive_gps/modules/auth/auth_routes.dart';
 import 'package:executive_gps/modules/auth/auth_module.dart';
 import 'package:executive_gps/modules/auth/pages/splash_page.dart';
+import 'package:executive_gps/modules/customers/customer_routes.dart';
+import 'package:executive_gps/modules/customers/customer_module.dart';
 import 'package:executive_gps/modules/employees/employee_routes.dart';
 import 'package:executive_gps/modules/employees/employee_module.dart';
 
@@ -13,6 +15,7 @@ class AppModule extends Module {
         AuthModule(),
         HomeModule(),
         EmployeeModule(),
+        CustomerModule(),
       ];
 
   @override
@@ -32,6 +35,10 @@ class AppModule extends Module {
     r.module(
       EmployeeRoutes.add.module,
       module: EmployeeModule(),
+    );
+    r.module(
+      CustomerRoutes.add.module,
+      module: CustomerModule(),
     );
   }
 }

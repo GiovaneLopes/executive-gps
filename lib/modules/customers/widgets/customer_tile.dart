@@ -5,17 +5,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
-import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
+import 'package:executive_gps/modules/customers/blocs/customer_bloc.dart';
 import 'package:executive_gps/modules/employees/widgets/info_action_line.dart';
-import 'package:executive_gps/libs/modules/employees/models/employee_model.dart';
+import 'package:executive_gps/libs/modules/customers/models/customer_model.dart';
 
-class EmployeeTile extends StatelessWidget {
-  final EmployeeModel employee;
-  const EmployeeTile({super.key, required this.employee});
+class CustomerTile extends StatelessWidget {
+  final CustomerModel customer;
+  const CustomerTile({super.key, required this.customer});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Modular.get<EmployeeBloc>();
+    final bloc = Modular.get<CustomerBloc>();
 
     return ExpansionTile(
       collapsedBackgroundColor: Colors.grey[50],
@@ -24,14 +24,14 @@ class EmployeeTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
-            FeatherIcons.user,
+            FeatherIcons.mapPin,
             color: AppColors.primaryDark,
             size: 16.w,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              employee.name,
+              customer.name,
               maxLines: 2,
               style: Styles.bodySmall.copyWith(
                 overflow: TextOverflow.ellipsis,
@@ -39,7 +39,7 @@ class EmployeeTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () => bloc.selectEmployee(employee),
+            onPressed: () => bloc.selectCustomer(customer),
             icon: const Icon(FeatherIcons.edit),
           ),
         ],
@@ -53,43 +53,39 @@ class EmployeeTile extends StatelessWidget {
             children: [
               InfoAction(
                 label: 'Cpf',
-                value: employee.cpf,
-              ),
-              InfoAction(
-                label: 'Rg',
-                value: employee.rg,
+                value: customer.cpf,
               ),
               InfoAction(
                 label: 'Email',
-                value: employee.email,
+                value: customer.email,
               ),
               InfoAction(
                 label: 'Telefone',
-                value: employee.mobile,
+                value: customer.mobile,
               ),
               InfoAction(
                 value:
-                    '${employee.address.logradouro}, ${employee.address.numero} - ${employee.address.bairro}, ${employee.address.localidade} - ${employee.address.uf}',
+                    '${customer.address.logradouro}, ${customer.address.numero} - ${customer.address.bairro}, ${customer.address.localidade} - ${customer.address.uf}',
               ),
               Visibility(
-                visible: employee.address.complemento?.isNotEmpty ?? false,
-                child: Text('${employee.address.complemento}',
+                visible: customer.address.complemento?.isNotEmpty ?? false,
+                child: Text('${customer.address.complemento}',
                     style: Styles.bodySmall),
               ),
               SizedBox(height: 12.h),
               Visibility(
-                visible: employee.images.isNotEmpty,
+                visible: customer.images.isNotEmpty,
                 child: SizedBox(
                   height: 80.h,
                   child: ListView.separated(
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
-                      itemCount: employee.images.length,
+                      itemCount: customer.images.length,
                       separatorBuilder: (context, index) =>
                           SizedBox(width: 2.w),
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () => bloc.selectImage(employee.images[index]),
+                          onTap: () => bloc.selectImage(customer.images[index]),
                           child: Container(
                             width: 80.w,
                             decoration: BoxDecoration(
@@ -99,7 +95,7 @@ class EmployeeTile extends StatelessWidget {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: NetworkImage(
-                                      employee.images[index].url ?? ''),
+                                      customer.images[index].url ?? ''),
                                 )),
                             child: const SizedBox(),
                           ),
@@ -121,7 +117,7 @@ class EmployeeTile extends StatelessWidget {
                 onPressed: () {
                   final Uri launchUri = Uri(
                     scheme: 'tel',
-                    path: employee.mobile,
+                    path: customer.mobile,
                   );
                   launchUrl(launchUri);
                 },
@@ -155,7 +151,7 @@ class EmployeeTile extends StatelessWidget {
                 ),
                 onPressed: () {
                   String whatsappUrl =
-                      'whatsapp://send?phone=${employee.mobile}';
+                      'whatsapp://send?phone=${customer.mobile}';
                   launchUrl(Uri.parse(whatsappUrl));
                 },
                 child: Row(

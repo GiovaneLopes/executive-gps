@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:executive_gps/modules/home/blocs/home_bloc.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
+import 'package:executive_gps/modules/customers/blocs/customer_bloc.dart';
 import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
 
 class HomeFloatingActionButton extends StatelessWidget {
@@ -27,9 +28,7 @@ class HomeFloatingActionButton extends StatelessWidget {
                 const SnackBar(content: Text('Activity Action Button Pressed')),
               );
             } else if (state.currentTab == 1) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Client Action Button Pressed')),
-              );
+              Modular.get<CustomerBloc>().selectCustomer(null);
             } else {
               Modular.get<EmployeeBloc>().selectEmployee(null);
             }
