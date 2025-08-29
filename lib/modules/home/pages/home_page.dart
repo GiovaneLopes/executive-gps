@@ -5,8 +5,8 @@ import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:executive_gps/modules/home/blocs/home_bloc.dart';
 import 'package:executive_gps/modules/home/widgets/home_appbar.dart';
 import 'package:executive_gps/modules/home/widgets/home_drawer.dart';
+import 'package:executive_gps/modules/tasks/widgets/task_content.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
-import 'package:executive_gps/modules/home/widgets/activities_content.dart';
 import 'package:executive_gps/modules/customers/widgets/customers_content.dart';
 import 'package:executive_gps/modules/employees/widgets/employees_content.dart';
 import 'package:executive_gps/modules/home/widgets/home_bottom_navigation_bar.dart';
@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: state.currentTab == 0
-                      ? const ActivitiesContent()
+                      ? const TasksContent()
                       : state.currentTab == 1
                           ? const CustomersContent()
                           : const EmployeesContent(),

@@ -13,6 +13,7 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
       mobile: json['mobile'] as String,
       email: json['email'] as String,
       cpf: json['cpf'] as String,
+      observations: json['observations'] as String?,
       address: AddressModel.fromJson(json['address'] as Map<String, dynamic>),
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => ImageModel.fromJson(e as Map<String, dynamic>))
@@ -27,6 +28,7 @@ Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>
       'mobile': instance.mobile,
       'email': instance.email,
       'cpf': instance.cpf,
+      'observations': instance.observations,
       'address': instance.address.toJson(),
       'images': instance.images.map((e) => e.toJson()).toList(),
     };

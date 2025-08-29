@@ -12,6 +12,7 @@ class CustomerModel extends Equatable {
   final String mobile;
   final String email;
   final String cpf;
+  final String? observations;
   final AddressModel address;
   final List<ImageModel> images;
 
@@ -21,9 +22,20 @@ class CustomerModel extends Equatable {
     required this.mobile,
     required this.email,
     required this.cpf,
+    this.observations,
     required this.address,
     this.images = const [],
   });
+
+  CustomerModel.empty()
+      : id = null,
+        name = 'Desconhecido',
+        mobile = 'Não informado',
+        email = 'Não informado',
+        cpf = 'Não informado',
+        observations = null,
+        address = const AddressModel.empty(),
+        images = [];
 
   CustomerModel copyWith({
     String? id,
@@ -31,6 +43,7 @@ class CustomerModel extends Equatable {
     String? mobile,
     String? email,
     String? cpf,
+    String? observations,
     AddressModel? address,
     List<ImageModel>? images,
   }) {
@@ -40,6 +53,7 @@ class CustomerModel extends Equatable {
       mobile: mobile ?? this.mobile,
       email: email ?? this.email,
       cpf: cpf ?? this.cpf,
+      observations: observations ?? this.observations,
       address: address ?? this.address,
       images: images ?? this.images,
     );
@@ -56,7 +70,13 @@ class CustomerModel extends Equatable {
         mobile,
         email,
         cpf,
+        observations,
         address,
         images,
       ];
+
+  @override
+  String toString() {
+    return name;
+  }
 }

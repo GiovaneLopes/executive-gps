@@ -29,6 +29,17 @@ class EmployeeModel extends Equatable {
     this.images = const [],
   });
 
+  EmployeeModel.empty()
+      : id = null,
+        name = 'Desconhecido',
+        mobile = 'Não informado',
+        email = 'Não informado',
+        rg = 'Não informado',
+        cpf = 'Não informado',
+        address = const AddressModel.empty(),
+        isAdmin = false,
+        images = [];
+
   EmployeeModel copyWith({
     String? id,
     String? name,
@@ -69,4 +80,9 @@ class EmployeeModel extends Equatable {
         isAdmin,
         images,
       ];
+
+  @override
+  String toString() {
+    return name;
+  }
 }

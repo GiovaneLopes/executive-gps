@@ -5,10 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:executive_gps/modules/home/home_routes.dart';
-import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:executive_gps/modules/shared/ui/custom_dialog.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
+import 'package:executive_gps/modules/shared/ui/snackbar_widget.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 import 'package:executive_gps/modules/customers/blocs/customer_bloc.dart';
 import 'package:executive_gps/modules/shared/utils/input_formatters.dart';
@@ -32,6 +32,7 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final cpfController = TextEditingController();
+  final observationsController = TextEditingController();
   final cepController = TextEditingController();
   final cityController = TextEditingController();
   final stateController = TextEditingController();
@@ -48,6 +49,8 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
       emailController.text = bloc.state.selectedCustomer?.email ?? '';
       phoneController.text = bloc.state.selectedCustomer?.mobile ?? '';
       cpfController.text = bloc.state.selectedCustomer?.cpf ?? '';
+      observationsController.text =
+          bloc.state.selectedCustomer?.observations ?? '';
       cepController.text = bloc.state.selectedCustomer?.address.cep ?? '';
       cityController.text =
           bloc.state.selectedCustomer?.address.localidade ?? '';
@@ -71,6 +74,7 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
         email: emailController.text,
         cpf: cpfController.text,
         images: bloc.state.selectedCustomer?.images ?? [],
+        observations: observationsController.text,
         address: AddressModel(
           cep: cepController.text,
           localidade: cityController.text,
@@ -102,9 +106,7 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
         ),
         actions: [
           Visibility(
-            visible: bloc.state.selectedCustomer != null &&
-                bloc.state.selectedCustomer?.id !=
-                    Modular.get<AuthBloc>().state.user?.id,
+            visible: bloc.state.selectedCustomer != null,
             child: IconButton(
               icon: const Icon(FeatherIcons.trash2, color: Colors.red),
               onPressed: () {
@@ -144,8 +146,18 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
         ),
       ),
       persistentFooterButtons: [
-        BlocBuilder<CustomerBloc, CustomerState>(
+        BlocConsumer<CustomerBloc, CustomerState>(
             bloc: bloc,
+            listener: (context, state) {
+              if (state.status == CustomerStatus.error) {
+                SnackbarWidget.mostrar(
+                  context,
+                  title: 'Erro',
+                  message: state.error?.message,
+                  type: SnackbarWidgetType.error,
+                );
+              }
+            },
             builder: (context, state) {
               return CustomElevatedButton(
                 onPressed: validateForm,
@@ -212,6 +224,13 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                       keyboardType: TextInputType.number,
                       inputFormatters: InputFormatters.cpfFormatter,
                       validator: InputValidators.validateCpf,
+                    ),
+                    SizedBox(height: 12.h),
+                    CustomTextFormField.light(
+                      labelText: 'Observações',
+                      controller: observationsController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
                     ),
                     SizedBox(height: 14.h),
                     Text(
@@ -361,110 +380,109 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                             ],
                           );
                         }),
-                        if (Modular.get<AuthBloc>().state.user?.isAdmin == true)
-                          InkWell(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CustomDialog(
-                                    title: 'Adicionar documento',
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          ImagePicker()
-                                              .pickImage(
-                                            source: ImageSource.gallery,
-                                          )
-                                              .then((image) {
-                                            if (image != null) {
-                                              bloc.addImage(image);
-                                            }
-                                          });
-                                          Modular.to.pop();
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              FeatherIcons.image,
-                                              color: AppColors.grey,
-                                              size: 24.w,
-                                            ),
-                                            SizedBox(width: 8.w),
-                                            Expanded(
-                                              child: Text(
-                                                'Galeria',
-                                                style: Styles.body.copyWith(
-                                                  color: AppColors.grey,
-                                                ),
+                        InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CustomDialog(
+                                  title: 'Adicionar documento',
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        ImagePicker()
+                                            .pickImage(
+                                          source: ImageSource.gallery,
+                                        )
+                                            .then((image) {
+                                          if (image != null) {
+                                            bloc.addImage(image);
+                                          }
+                                        });
+                                        Modular.to.pop();
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            FeatherIcons.image,
+                                            color: AppColors.grey,
+                                            size: 24.w,
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Expanded(
+                                            child: Text(
+                                              'Galeria',
+                                              style: Styles.body.copyWith(
+                                                color: AppColors.grey,
                                               ),
                                             ),
-                                            Icon(
-                                              FeatherIcons.chevronRight,
-                                              color: AppColors.grey,
-                                              size: 24.w,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          Icon(
+                                            FeatherIcons.chevronRight,
+                                            color: AppColors.grey,
+                                            size: 24.w,
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(height: 8.h),
-                                      const Divider(),
-                                      SizedBox(height: 8.h),
-                                      TextButton(
-                                        onPressed: () async {
-                                          await ImagePicker()
-                                              .pickImage(
-                                            source: ImageSource.camera,
-                                          )
-                                              .then((image) {
-                                            if (image != null) {
-                                              bloc.addImage(image);
-                                            }
-                                          });
-                                          Modular.to.pop();
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              FeatherIcons.camera,
-                                              color: AppColors.grey,
-                                              size: 24.w,
-                                            ),
-                                            SizedBox(width: 8.w),
-                                            Expanded(
-                                              child: Text(
-                                                'Câmera',
-                                                style: Styles.body.copyWith(
-                                                  color: AppColors.grey,
-                                                ),
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    const Divider(),
+                                    SizedBox(height: 8.h),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await ImagePicker()
+                                            .pickImage(
+                                          source: ImageSource.camera,
+                                        )
+                                            .then((image) {
+                                          if (image != null) {
+                                            bloc.addImage(image);
+                                          }
+                                        });
+                                        Modular.to.pop();
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            FeatherIcons.camera,
+                                            color: AppColors.grey,
+                                            size: 24.w,
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Expanded(
+                                            child: Text(
+                                              'Câmera',
+                                              style: Styles.body.copyWith(
+                                                color: AppColors.grey,
                                               ),
                                             ),
-                                            Icon(
-                                              FeatherIcons.chevronRight,
-                                              color: AppColors.grey,
-                                              size: 24.w,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          Icon(
+                                            FeatherIcons.chevronRight,
+                                            color: AppColors.grey,
+                                            size: 24.w,
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(height: 12.h),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              width: 100.w,
-                              height: 100.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(
-                                    color: AppColors.grey, width: 1.w),
-                              ),
-                              child: Icon(Icons.add_circle_outline_rounded,
-                                  color: AppColors.grey, size: 32.w),
+                                    ),
+                                    SizedBox(height: 12.h),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: 100.w,
+                            height: 100.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.r),
+                              border:
+                                  Border.all(color: AppColors.grey, width: 1.w),
                             ),
+                            child: Icon(Icons.add_circle_outline_rounded,
+                                color: AppColors.grey, size: 32.w),
                           ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 12.h),

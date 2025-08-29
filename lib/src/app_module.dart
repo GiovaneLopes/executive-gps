@@ -3,6 +3,8 @@ import 'package:executive_gps/modules/home/home_routes.dart';
 import 'package:executive_gps/modules/home/home_module.dart';
 import 'package:executive_gps/modules/auth/auth_routes.dart';
 import 'package:executive_gps/modules/auth/auth_module.dart';
+import 'package:executive_gps/modules/tasks/task_module.dart';
+import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:executive_gps/modules/auth/pages/splash_page.dart';
 import 'package:executive_gps/modules/customers/customer_routes.dart';
 import 'package:executive_gps/modules/customers/customer_module.dart';
@@ -16,6 +18,7 @@ class AppModule extends Module {
         HomeModule(),
         EmployeeModule(),
         CustomerModule(),
+        TaskModule(),
       ];
 
   @override
@@ -39,6 +42,10 @@ class AppModule extends Module {
     r.module(
       CustomerRoutes.add.module,
       module: CustomerModule(),
+    );
+    r.module(
+      TaskRoutes.add.module,
+      module: TaskModule(),
     );
   }
 }

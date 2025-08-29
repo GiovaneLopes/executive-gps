@@ -22,6 +22,15 @@ class AddressModel extends Equatable {
     this.cep,
   });
 
+  const AddressModel.empty()
+      : logradouro = 'Não informado',
+        bairro = '',
+        numero = '',
+        complemento = '',
+        localidade = '',
+        uf = '',
+        cep = '';
+
   AddressModel copyWith({
     String? logradouro,
     String? bairro,
@@ -57,4 +66,9 @@ class AddressModel extends Equatable {
         uf,
         cep,
       ];
+
+  @override
+  String toString() {
+    return '$logradouro, $numero - $bairro, $localidade - $uf - $cep';
+  }
 }
