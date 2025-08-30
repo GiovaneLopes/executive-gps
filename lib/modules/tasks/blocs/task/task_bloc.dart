@@ -81,13 +81,15 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
       final employeeId = state.isAdmin ? null : state.user?.id;
       final tasks = await taskRepository.getTasks(employeeId);
       final realTasks = await Future.wait(tasks.map((task) async {
-        final customer = customerBloc.state.customers.firstWhere(
-            (customer) => customer.id == task.customerId,
-            orElse: () => CustomerModel.empty());
-        final employee = employeeBloc.state.employees.firstWhere(
-          (employee) => employee.id == task.employeeId,
-          orElse: () => EmployeeModel.empty(),
-        );
+        final customer = customerBloc.state.customers
+            .where((customer) => customer.id == task.customerId)
+            .cast<CustomerModel?>()
+            .firstWhere((customer) => customer != null, orElse: () => null);
+
+        final employee = employeeBloc.state.employees
+            .where((employee) => employee.id == task.employeeId)
+            .cast<EmployeeModel?>()
+            .firstWhere((employee) => employee != null, orElse: () => null);
         return task.copyWith(customer: customer, employee: employee);
       }).toList());
       emit(
