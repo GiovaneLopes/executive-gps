@@ -68,16 +68,14 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
 
   void _checkLoad() {
     if (state.status != TaskStatus.loading) {
+      emit(state.copyWith(user: authBloc.state.user));
       getTasks();
     }
   }
 
   void getTasks() async {
     try {
-      emit(state.copyWith(
-        status: TaskStatus.loading,
-        user: authBloc.state.user,
-      ));
+      emit(state.copyWith(status: TaskStatus.loading));
       final employeeId = state.isAdmin ? null : state.user?.id;
       final tasks = await taskRepository.getTasks(employeeId);
       final realTasks = await Future.wait(tasks.map((task) async {
@@ -95,7 +93,7 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
       emit(
         state.copyWith(
           tasks: realTasks.isEmpty ? state.tasks : realTasks,
-          hasMore: tasks.isNotEmpty,
+          hasMore: tasks.length > state.tasks.length,
           status: TaskStatus.loaded,
         ),
       );
