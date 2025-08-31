@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/customers/widgets/info_line.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -71,6 +72,15 @@ class CustomerTile extends StatelessWidget {
                 visible: customer.address.complemento?.isNotEmpty ?? false,
                 child: Text('${customer.address.complemento}',
                     style: Styles.bodySmall),
+              ),
+              Visibility(
+                visible: customer.observations?.isNotEmpty ?? false,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 12.h),
+                  child: InfoLine(
+                    value: 'Observações: ${customer.observations}',
+                  ),
+                ),
               ),
               SizedBox(height: 12.h),
               Visibility(

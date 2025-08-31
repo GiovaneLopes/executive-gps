@@ -9,6 +9,7 @@ class CustomerState extends Equatable {
   final List<ImageModel> deletedImages;
   final CustomerStatus status;
   final AddressModel? address;
+  final AppError? error;
 
   const CustomerState({
     this.route,
@@ -19,6 +20,7 @@ class CustomerState extends Equatable {
     this.deletedImages = const [],
     this.status = CustomerStatus.initial,
     this.address,
+    this.error,
   });
 
   CustomerState copyWith({
@@ -30,6 +32,7 @@ class CustomerState extends Equatable {
     List<ImageModel>? deletedImages,
     CustomerStatus? status,
     AddressModel? address,
+    AppError? error,
   }) {
     return CustomerState(
       route: route?..navigate(),
@@ -41,6 +44,7 @@ class CustomerState extends Equatable {
       deletedImages: deletedImages ?? this.deletedImages,
       status: status ?? this.status,
       address: address ?? this.address,
+      error: error ?? this.error,
     );
   }
 
@@ -53,5 +57,6 @@ class CustomerState extends Equatable {
         deletedImages,
         status,
         address,
+        error,
       ];
 }

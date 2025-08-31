@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:executive_gps/libs/utils/network_checker.dart';
+import 'package:executive_gps/libs/exceptions/generic_errors.dart';
 import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
 import 'package:executive_gps/libs/modules/employees/models/employee_model.dart';
 
@@ -27,10 +30,12 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
 
   @override
   Future<List<EmployeeModel>> getEmployees() async {
-    final querySnapshot = await db.collection('employees').get();
-    return querySnapshot.docs
-        .map((doc) => EmployeeModel.fromJson(doc.data()).copyWith(id: doc.id))
-        .toList();
+    return await _safeCall(() async {
+      final querySnapshot = await db.collection('employees').get();
+      return querySnapshot.docs
+          .map((doc) => EmployeeModel.fromJson(doc.data()).copyWith(id: doc.id))
+          .toList();
+    });
   }
 
   @override
@@ -39,7 +44,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
     String password,
     List<ImageModel>? images,
   ) async {
-    try {
+    await _safeCall(() async {
       HttpsCallable callable = functions.httpsCallable('createUserByAdmin');
       final response = await callable.call(<String, dynamic>{
         'email': employee.email,
@@ -53,9 +58,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
           .collection('employees')
           .doc(response.data['uid'])
           .set(employee.copyWith(images: newUrls).toJson());
-    } catch (e) {
-      throw Exception('### Error adding employee: $e');
-    }
+    });
   }
 
   @override
@@ -64,7 +67,7 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
     List<ImageModel>? images,
     List<ImageModel>? deletedImages,
   ) async {
-    try {
+    await _safeCall(() async {
       final List<ImageModel> newUrls = await saveImages(
         employee.id!,
         images?.where((img) => img.file != null).toList(),
@@ -80,24 +83,20 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
           .collection('employees')
           .doc(employee.id)
           .update(employee.copyWith(images: imagesUpdated).toJson());
-    } catch (e) {
-      throw Exception('### Error updating employee: $e');
-    }
+    });
   }
 
   @override
   Future<void> deleteEmployee(String employeeId) async {
-    try {
+    await _safeCall(() async {
       _deleteAuthUser(employeeId);
       await db.collection('employees').doc(employeeId).delete();
-    } catch (e) {
-      throw Exception('Error deleting employee: $e');
-    }
+    });
   }
 
   Future<List<ImageModel>> saveImages(
       String userId, List<ImageModel>? images) async {
-    try {
+    return await _safeCall(() async {
       final imageModels = <ImageModel>[];
       for (ImageModel image in images ?? []) {
         final fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
@@ -107,35 +106,47 @@ class EmployeeDatasourceImpl implements EmployeeDatasource {
         imageModels.add(ImageModel(url: url, name: fileName));
       }
       return imageModels;
-    } catch (e) {
-      throw Exception('Error saving image: $e');
-    }
+    });
   }
 
   Future<void> deleteImages(String userId, List<ImageModel>? images) async {
-    try {
+    _safeCall(() async {
       for (ImageModel image in images ?? []) {
         final ref = storage.ref().child('employees/$userId/${image.name}');
         await ref.delete();
       }
-    } catch (e) {
-      throw Exception('Error deleting image: $e');
-    }
+    });
   }
 
   Future<void> _deleteAuthUser(String uid) async {
-    try {
+    _safeCall(() async {
       HttpsCallable callable = functions.httpsCallable('deleteUser');
       await callable.call(<String, dynamic>{
         'uid': uid,
       });
+    });
+  }
+
+  Future<T> _safeCall<T>(Future<T> Function() action) async {
+    try {
+      if (!await NetworkChecker.isConnected()) {
+        throw AppGenericErrors.noConnectionError;
+      }
+      return await action();
     } on FirebaseFunctionsException catch (e) {
       debugPrint('Erro na Cloud Function:');
       debugPrint('Código: ${e.code}');
       debugPrint('Detalhes: ${e.details}');
       debugPrint('Mensagem: ${e.message}');
+      rethrow;
     } catch (e) {
-      debugPrint('Ocorreu um erro inesperado: $e');
+      log(e.toString());
+      if (e is AppGenericErrors) {
+        if (e.code == AppGenericErrors.noConnectionError.code) {
+          throw AppGenericErrors.noConnectionError;
+        }
+      }
+      throw AppGenericErrors.genericError;
     }
   }
 }

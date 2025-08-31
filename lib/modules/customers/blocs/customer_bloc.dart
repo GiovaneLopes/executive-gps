@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:executive_gps/libs/exceptions/app_error.dart';
+import 'package:executive_gps/libs/exceptions/generic_errors.dart';
 import 'package:executive_gps/modules/shared/utils/app_route.dart';
 import 'package:executive_gps/modules/customers/customer_routes.dart';
 import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
@@ -36,9 +38,13 @@ class CustomerBloc extends Cubit<CustomerState> {
     try {
       emit(state.copyWith(status: CustomerStatus.loading));
       final customers = await customerRepository.getCustomers();
+      customers.sort((a, b) => a.name.compareTo(b.name));
       emit(state.copyWith(customers: customers, status: CustomerStatus.loaded));
     } catch (e) {
-      emit(state.copyWith(status: CustomerStatus.error));
+      emit(state.copyWith(
+        status: CustomerStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 
@@ -49,7 +55,10 @@ class CustomerBloc extends Cubit<CustomerState> {
       emit(state.copyWith(
           address: address, status: CustomerStatus.addressLoaded));
     } catch (e) {
-      emit(state.copyWith(status: CustomerStatus.error));
+      emit(state.copyWith(
+        status: CustomerStatus.error,
+        error: AppGenericErrors.genericError,
+      ));
     }
   }
 
@@ -70,7 +79,10 @@ class CustomerBloc extends Cubit<CustomerState> {
       getCustomers();
     } catch (e) {
       debugPrint('### Error adding customer: $e');
-      emit(state.copyWith(status: CustomerStatus.error));
+      emit(state.copyWith(
+        status: CustomerStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 
@@ -96,7 +108,10 @@ class CustomerBloc extends Cubit<CustomerState> {
       getCustomers();
     } catch (e) {
       debugPrint('### Error adding customer: $e');
-      emit(state.copyWith(status: CustomerStatus.error));
+      emit(state.copyWith(
+        status: CustomerStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 
@@ -171,7 +186,10 @@ class CustomerBloc extends Cubit<CustomerState> {
       getCustomers();
     } catch (e) {
       debugPrint('### Error deleting customer: $e');
-      emit(state.copyWith(status: CustomerStatus.error));
+      emit(state.copyWith(
+        status: CustomerStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 }

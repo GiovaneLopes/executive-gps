@@ -11,6 +11,7 @@ class EmployeeState extends Equatable {
   final String? authenticatedUserId;
   final EmployeeStatus status;
   final AddressModel? address;
+  final AppError? error;
 
   const EmployeeState({
     this.route,
@@ -23,6 +24,7 @@ class EmployeeState extends Equatable {
     this.authenticatedUserId,
     this.status = EmployeeStatus.initial,
     this.address,
+    this.error,
   });
 
   EmployeeModel? get authenticatedUser =>
@@ -39,6 +41,7 @@ class EmployeeState extends Equatable {
     bool? isAdmin,
     EmployeeStatus? status,
     AddressModel? address,
+    AppError? error,
   }) {
     return EmployeeState(
       route: route?..navigate(),
@@ -52,6 +55,7 @@ class EmployeeState extends Equatable {
       isAdmin: isAdmin ?? this.isAdmin,
       status: status ?? this.status,
       address: address ?? this.address,
+      error: error ?? this.error,
     );
   }
 
@@ -66,5 +70,6 @@ class EmployeeState extends Equatable {
         isAdmin,
         status,
         address,
+        error,
       ];
 }

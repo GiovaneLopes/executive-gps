@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
+import 'package:executive_gps/libs/exceptions/generic_errors.dart';
 import 'package:executive_gps/modules/shared/utils/app_route.dart';
 import 'package:executive_gps/modules/employees/employee_routes.dart';
 import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
@@ -44,9 +46,13 @@ class EmployeeBloc extends Cubit<EmployeeState> {
     try {
       emit(state.copyWith(status: EmployeeStatus.loading));
       final employees = await employeeRepository.getEmployees();
+      employees.sort((a, b) => a.name.compareTo(b.name));
       emit(state.copyWith(employees: employees, status: EmployeeStatus.loaded));
     } catch (e) {
-      emit(state.copyWith(status: EmployeeStatus.error));
+      emit(state.copyWith(
+        status: EmployeeStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 
@@ -57,7 +63,10 @@ class EmployeeBloc extends Cubit<EmployeeState> {
       emit(state.copyWith(
           address: address, status: EmployeeStatus.addressLoaded));
     } catch (e) {
-      emit(state.copyWith(status: EmployeeStatus.error));
+      emit(state.copyWith(
+        status: EmployeeStatus.error,
+        error: AppGenericErrors.genericError,
+      ));
     }
   }
 
@@ -81,7 +90,10 @@ class EmployeeBloc extends Cubit<EmployeeState> {
       getEmployees();
     } catch (e) {
       debugPrint('### Error adding employee: $e');
-      emit(state.copyWith(status: EmployeeStatus.error));
+      emit(state.copyWith(
+        status: EmployeeStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 
@@ -108,7 +120,10 @@ class EmployeeBloc extends Cubit<EmployeeState> {
       getEmployees();
     } catch (e) {
       debugPrint('### Error adding employee: $e');
-      emit(state.copyWith(status: EmployeeStatus.error));
+      emit(state.copyWith(
+        status: EmployeeStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 
@@ -187,7 +202,10 @@ class EmployeeBloc extends Cubit<EmployeeState> {
       getEmployees();
     } catch (e) {
       debugPrint('### Error deleting employee: $e');
-      emit(state.copyWith(status: EmployeeStatus.error));
+      emit(state.copyWith(
+        status: EmployeeStatus.error,
+        error: e as AppError,
+      ));
     }
   }
 }

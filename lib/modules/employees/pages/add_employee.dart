@@ -9,6 +9,7 @@ import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:executive_gps/modules/shared/ui/custom_dialog.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
+import 'package:executive_gps/modules/shared/ui/snackbar_widget.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
 import 'package:executive_gps/modules/shared/utils/input_formatters.dart';
@@ -148,15 +149,19 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
         ),
       ),
       persistentFooterButtons: [
-        BlocBuilder<EmployeeBloc, EmployeeState>(
+        BlocConsumer<EmployeeBloc, EmployeeState>(
             bloc: bloc,
+            listener: (context, state) {
+              if (state.status == EmployeeStatus.error) {
+                SnackbarWidget.mostrar(
+                  context,
+                  title: 'Erro',
+                  message: state.error?.message,
+                  type: SnackbarWidgetType.error,
+                );
+              }
+            },
             builder: (context, state) {
-              // print('### status: ${state.status}');
-              // print('### images(${state.images.length}): ${state.images}');
-              // print(
-              //     '### deletedImages(${state.deletedImages.length}): ${state.deletedImages}');
-              // print(
-              //     '### employeeImages(${state.selectedEmployee?.images.length}): ${state.selectedEmployee?.images} - length: ${state.selectedEmployee?.images.length}');
               return CustomElevatedButton(
                 onPressed: validateForm,
                 loading: state.status == EmployeeStatus.loading,
