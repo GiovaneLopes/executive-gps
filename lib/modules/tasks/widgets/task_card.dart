@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/customers/widgets/info_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:executive_gps/modules/customers/widgets/info_action_line.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TaskCard extends StatelessWidget {
   final TaskModel task;
@@ -84,13 +86,15 @@ class TaskCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  Row(
-                    children: [
-                      Text(
-                        task.customer?.mobile ?? 'Telefone não informado',
-                        style: Styles.bodySmall,
-                      ),
-                    ],
+                  InfoAction.call(
+                    value: task.customer?.mobile ?? 'Telefone não informado',
+                    onTap: () {
+                      final Uri launchUri = Uri(
+                        scheme: 'tel',
+                        path: task.customer?.mobile,
+                      );
+                      launchUrl(launchUri);
+                    },
                   ),
                   SizedBox(height: 8.h),
                   Row(
@@ -102,18 +106,23 @@ class TaskCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  Row(
-                    children: [
-                      Text(
-                        'Placa: ${task.vehiclePlate}',
-                        style: Styles.bodySmall,
-                      ),
-                    ],
+                  Text(
+                    'Placa: ${task.vehiclePlate}',
+                    style: Styles.bodySmall,
                   ),
                   SizedBox(height: 8.h),
                   InfoAction(
                     value: task.customer?.address.toString() ??
                         'Endereço não informado',
+                  ),
+                  Visibility(
+                    visible: task.observation?.isNotEmpty ?? false,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 12.h),
+                      child: InfoLine(
+                        value: 'Observações: ${task.observation}',
+                      ),
+                    ),
                   ),
                 ],
               ),
