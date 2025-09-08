@@ -7,6 +7,9 @@ class TaskRoutes extends AppRoute {
   TaskRoutes(this.name, {this.type}) : super(module: '/tasks');
 
   static final add = TaskRoutes('/add');
-  static final employeeDetails = TaskRoutes('/employee-details');
+  static final details = TaskRoutes('/details');
+  static final checklist = TaskRoutes('/checklist');
   static final imageDetails = TaskRoutes('/image-details');
+  static final signature = TaskRoutes('/signature');
+  static final photos = TaskRoutes('/photos');
 }

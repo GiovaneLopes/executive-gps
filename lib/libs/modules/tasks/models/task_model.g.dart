@@ -23,6 +23,9 @@ TaskModel _$TaskModelFromJson(Map<String, dynamic> json) => TaskModel(
       dueDate: DateTime.parse(json['dueDate'] as String),
       vehiclePlate: json['vehiclePlate'] as String,
       observation: json['observation'] as String?,
+      answers: json['answers'] == null
+          ? null
+          : TaskAnswersModel.fromJson(json['answers'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
@@ -37,6 +40,7 @@ Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
       'dueDate': instance.dueDate.toIso8601String(),
       'vehiclePlate': instance.vehiclePlate,
       'observation': instance.observation,
+      'answers': instance.answers?.toJson(),
     };
 
 const _$TaskStepEnumMap = {

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_type.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
@@ -20,6 +21,7 @@ class TaskModel extends Equatable {
   final DateTime dueDate;
   final String vehiclePlate;
   final String? observation;
+  final TaskAnswersModel? answers;
 
   const TaskModel({
     this.id,
@@ -33,6 +35,7 @@ class TaskModel extends Equatable {
     required this.dueDate,
     required this.vehiclePlate,
     this.observation,
+    this.answers,
   });
 
   TaskModel copyWith({
@@ -47,6 +50,7 @@ class TaskModel extends Equatable {
     DateTime? dueDate,
     String? vehiclePlate,
     String? observation,
+    TaskAnswersModel? answers,
   }) {
     return TaskModel(
       id: id ?? this.id,
@@ -60,6 +64,7 @@ class TaskModel extends Equatable {
       dueDate: dueDate ?? this.dueDate,
       vehiclePlate: vehiclePlate ?? this.vehiclePlate,
       observation: observation ?? this.observation,
+      answers: answers ?? this.answers,
     );
   }
 
@@ -80,5 +85,6 @@ class TaskModel extends Equatable {
         dueDate,
         vehiclePlate,
         observation,
+        answers,
       ];
 }

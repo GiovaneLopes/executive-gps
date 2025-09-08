@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/customers/customer_routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:executive_gps/modules/customers/pages/add_customer.dart';
 import 'package:executive_gps/modules/customers/blocs/customer_bloc.dart';
@@ -19,9 +20,9 @@ class CustomerModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/add', child: (_) => const AddCustomerPage());
+    r.child(CustomerRoutes.add.name, child: (_) => const AddCustomerPage());
     r.child(
-      '/image-details',
+      CustomerRoutes.imageDetails.name,
       child: (_) => const ImageDetailsPage(),
     );
   }

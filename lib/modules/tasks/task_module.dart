@@ -1,9 +1,13 @@
+import 'package:executive_gps/modules/tasks/pages/task_checklist_page.dart';
+import 'package:executive_gps/modules/tasks/pages/task_photos_page.dart';
+import 'package:executive_gps/modules/tasks/pages/task_signature_page.dart';
+import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:executive_gps/modules/tasks/pages/add_task.dart';
 import 'package:executive_gps/modules/customers/customer_module.dart';
 import 'package:executive_gps/modules/employees/employee_module.dart';
 import 'package:executive_gps/modules/tasks/blocs/task/task_bloc.dart';
-import 'package:executive_gps/modules/tasks/pages/task_employee_details_page.dart';
+import 'package:executive_gps/modules/tasks/pages/task_details_page.dart';
 import 'package:executive_gps/libs/modules/tasks/datasources/task_datasource.dart';
 import 'package:executive_gps/libs/modules/tasks/repositories/task_repository.dart';
 import 'package:executive_gps/libs/modules/address/datasources/address_datasource.dart';
@@ -29,7 +33,10 @@ class TaskModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/add', child: (_) => const AddTaskPage());
-    r.child('/employee-details', child: (_) => const TaskEmployeeDetailsPage());
+    r.child(TaskRoutes.add.name, child: (_) => const AddTaskPage());
+    r.child(TaskRoutes.details.name, child: (_) => const TaskDetailsPage());
+    r.child(TaskRoutes.checklist.name, child: (_) => const TaskChecklistPage());
+    r.child(TaskRoutes.signature.name, child: (_) => const TaskSignaturePage());
+    r.child(TaskRoutes.photos.name, child: (_) => const TaskPhotosPage());
   }
 }
