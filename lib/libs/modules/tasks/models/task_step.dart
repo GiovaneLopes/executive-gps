@@ -20,7 +20,7 @@ enum TaskStep {
     }
   }
 
-  static Color getColor(TaskStep status) {
+  static Color getColor(TaskStep? status) {
     switch (status) {
       case TaskStep.waiting:
         return Colors.orange;
@@ -30,6 +30,8 @@ enum TaskStep {
         return Colors.green;
       case TaskStep.canceled:
         return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 

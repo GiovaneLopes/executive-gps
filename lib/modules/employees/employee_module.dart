@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/employees/employee_routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:executive_gps/modules/auth/auth_module.dart';
 import 'package:executive_gps/modules/employees/pages/add_employee.dart';
@@ -25,7 +26,8 @@ class EmployeeModule extends Module {
 
   @override
   void routes(r) {
-    r.child('/add', child: (_) => const AddEmployeePage());
-    r.child('/image-details', child: (_) => const ImageDetailsPage());
+    r.child(EmployeeRoutes.add.name, child: (_) => const AddEmployeePage());
+    r.child(EmployeeRoutes.imageDetails.name,
+        child: (_) => const ImageDetailsPage());
   }
 }

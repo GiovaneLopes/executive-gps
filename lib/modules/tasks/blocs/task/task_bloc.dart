@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
+import 'package:executive_gps/modules/tasks/blocs/task_employee/task_employee_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +30,7 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
   final TaskRepository taskRepository;
   final CustomerBloc customerBloc;
   final EmployeeBloc employeeBloc;
+  final TaskEmployeeBloc taskEmployeeBloc;
   final AuthBloc authBloc;
 
   late StreamSubscription<CustomerState> _blocCustomerSubscription;
@@ -37,6 +40,7 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
     this.taskRepository,
     this.customerBloc,
     this.employeeBloc,
+    this.taskEmployeeBloc,
     this.authBloc,
   ) : super(const TaskState()) {
     _blocCustomerSubscription = customerBloc.stream.listen((customerState) {
@@ -150,12 +154,16 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
       tasks: state.tasks,
       user: state.user,
     ));
-    emit(
-      state.copyWith(
-        selectedTask: task != null ? () => task : () => null,
-        route: state.isAdmin ? TaskRoutes.add : TaskRoutes.employeeDetails,
-      ),
-    );
+    if (state.isAdmin) {
+      emit(
+        state.copyWith(
+          selectedTask: task != null ? () => task : () => null,
+          route: task?.step != TaskStep.completed ? TaskRoutes.add : null,
+        ),
+      );
+    } else {
+      taskEmployeeBloc.init(task);
+    }
   }
 
   void deleteTask() async {
