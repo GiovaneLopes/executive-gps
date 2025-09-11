@@ -154,11 +154,11 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
       tasks: state.tasks,
       user: state.user,
     ));
-    if (state.isAdmin) {
+    if (state.isAdmin && task?.step != TaskStep.completed) {
       emit(
         state.copyWith(
           selectedTask: task != null ? () => task : () => null,
-          route: task?.step != TaskStep.completed ? TaskRoutes.add : null,
+          route: TaskRoutes.add,
         ),
       );
     } else {

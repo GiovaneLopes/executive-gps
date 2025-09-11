@@ -2,24 +2,32 @@ part of './task_employee_bloc.dart';
 
 class TaskEmployeeState extends Equatable {
   final AppRoute? route;
+  final TaskEmployeeStatus status;
   final TaskModel? selectedTask;
   final TaskAnswersModel answers;
+  final List<TaskImageModel> images;
 
   const TaskEmployeeState({
     this.route,
+    this.status = TaskEmployeeStatus.initial,
     this.selectedTask,
     this.answers = const TaskAnswersModel(),
+    this.images = const [],
   });
 
   TaskEmployeeState copyWith({
     AppRoute? route,
+    TaskEmployeeStatus? status,
     TaskModel? selectedTask,
     TaskAnswersModel? answers,
+    List<TaskImageModel>? images,
   }) {
     return TaskEmployeeState(
       route: route?..navigate(),
+      status: status ?? this.status,
       selectedTask: selectedTask ?? this.selectedTask,
       answers: answers ?? this.answers,
+      images: images ?? this.images,
     );
   }
 
@@ -37,5 +45,11 @@ class TaskEmployeeState extends Equatable {
         route,
         selectedTask,
         answers,
+        status,
+        images,
       ];
+
+  TaskImageModel? image(TaskImageType type) => images.isEmpty
+      ? null
+      : images.firstWhereOrNull((image) => image.type == type);
 }

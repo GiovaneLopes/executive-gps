@@ -15,24 +15,10 @@ TaskAnswersModel _$TaskAnswersModelFromJson(Map<String, dynamic> json) =>
       injectionLight: json['injectionLight'] as bool? ?? false,
       km: json['km'] as String?,
       observation: json['observation'] as String?,
-      signature: json['signature'] == null
-          ? null
-          : ImageModel.fromJson(json['signature'] as Map<String, dynamic>),
-      equipmentId: json['equipmentId'] == null
-          ? null
-          : ImageModel.fromJson(json['equipmentId'] as Map<String, dynamic>),
-      wiring: json['wiring'] == null
-          ? null
-          : ImageModel.fromJson(json['wiring'] as Map<String, dynamic>),
-      customerPlace: json['customerPlace'] == null
-          ? null
-          : ImageModel.fromJson(json['customerPlace'] as Map<String, dynamic>),
-      vehicleFront: json['vehicleFront'] == null
-          ? null
-          : ImageModel.fromJson(json['vehicleFront'] as Map<String, dynamic>),
-      additional: json['additional'] == null
-          ? null
-          : ImageModel.fromJson(json['additional'] as Map<String, dynamic>),
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => TaskImageModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <TaskImageModel>[],
     );
 
 Map<String, dynamic> _$TaskAnswersModelToJson(TaskAnswersModel instance) =>
@@ -41,10 +27,5 @@ Map<String, dynamic> _$TaskAnswersModelToJson(TaskAnswersModel instance) =>
       'injectionLight': instance.injectionLight,
       'km': instance.km,
       'observation': instance.observation,
-      'signature': instance.signature?.toJson(),
-      'equipmentId': instance.equipmentId?.toJson(),
-      'wiring': instance.wiring?.toJson(),
-      'customerPlace': instance.customerPlace?.toJson(),
-      'vehicleFront': instance.vehicleFront?.toJson(),
-      'additional': instance.additional?.toJson(),
+      'images': instance.images.map((e) => e.toJson()).toList(),
     };

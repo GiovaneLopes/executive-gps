@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'package:executive_gps/modules/shared/ui/new_photo_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:executive_gps/modules/home/home_routes.dart';
@@ -385,88 +385,10 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return CustomDialog(
-                                  title: 'Adicionar documento',
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        ImagePicker()
-                                            .pickImage(
-                                          source: ImageSource.gallery,
-                                        )
-                                            .then((image) {
-                                          if (image != null) {
-                                            bloc.addImage(image);
-                                          }
-                                        });
-                                        Modular.to.pop();
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            FeatherIcons.image,
-                                            color: AppColors.grey,
-                                            size: 24.w,
-                                          ),
-                                          SizedBox(width: 8.w),
-                                          Expanded(
-                                            child: Text(
-                                              'Galeria',
-                                              style: Styles.body.copyWith(
-                                                color: AppColors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          Icon(
-                                            FeatherIcons.chevronRight,
-                                            color: AppColors.grey,
-                                            size: 24.w,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 8.h),
-                                    const Divider(),
-                                    SizedBox(height: 8.h),
-                                    TextButton(
-                                      onPressed: () async {
-                                        await ImagePicker()
-                                            .pickImage(
-                                          source: ImageSource.camera,
-                                        )
-                                            .then((image) {
-                                          if (image != null) {
-                                            bloc.addImage(image);
-                                          }
-                                        });
-                                        Modular.to.pop();
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            FeatherIcons.camera,
-                                            color: AppColors.grey,
-                                            size: 24.w,
-                                          ),
-                                          SizedBox(width: 8.w),
-                                          Expanded(
-                                            child: Text(
-                                              'Câmera',
-                                              style: Styles.body.copyWith(
-                                                color: AppColors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          Icon(
-                                            FeatherIcons.chevronRight,
-                                            color: AppColors.grey,
-                                            size: 24.w,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 12.h),
-                                  ],
+                                return NewPhotoDialog(
+                                  onNewPhoto: (image) {
+                                    bloc.addImage(image);
+                                  },
                                 );
                               },
                             );

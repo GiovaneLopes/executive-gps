@@ -1,3 +1,4 @@
+import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
 import 'package:executive_gps/modules/shared/ui/custom_elevated_button.dart';
@@ -31,7 +32,7 @@ class _TaskChecklistPageState extends State<TaskChecklistPage> {
       validated = true;
     });
     if (formKey.currentState?.validate() == true &&
-        bloc.state.answers.signature != null &&
+        bloc.state.image(TaskImageType.signature) != null &&
         bloc.state.isChecklistCompleted) {
       bloc.checklistFinished(
         injectionLight,
@@ -55,6 +56,7 @@ class _TaskChecklistPageState extends State<TaskChecklistPage> {
       appBar: AppBar(
         title: const Text('Checklist'),
         automaticallyImplyLeading: false,
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -209,12 +211,13 @@ class _TaskChecklistPageState extends State<TaskChecklistPage> {
                           child: Row(
                             children: [
                               Icon(
-                                state.answers.signature == null
+                                state.image(TaskImageType.signature) == null
                                     ? FeatherIcons.alertCircle
                                     : FeatherIcons.checkCircle,
-                                color: state.answers.signature == null
-                                    ? Colors.red
-                                    : Colors.green,
+                                color:
+                                    state.image(TaskImageType.signature) == null
+                                        ? Colors.red
+                                        : Colors.green,
                               ),
                               SizedBox(width: 8.w),
                               Text(

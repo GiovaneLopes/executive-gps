@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 import 'package:executive_gps/modules/shared/ui/custom_elevated_button.dart';
 import 'package:executive_gps/modules/tasks/blocs/task_employee/task_employee_bloc.dart';
@@ -24,16 +25,13 @@ class _TaskSignaturePageState extends State<TaskSignaturePage> {
   );
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Assinatura'),
         automaticallyImplyLeading: false,
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -43,7 +41,7 @@ class _TaskSignaturePageState extends State<TaskSignaturePage> {
         ),
       ),
       floatingActionButton: Visibility(
-        visible: bloc.state.answers.signature != null,
+        visible: bloc.state.image(TaskImageType.signature) != null,
         child: FloatingActionButton(
           backgroundColor: Colors.red,
           onPressed: () {
@@ -57,26 +55,26 @@ class _TaskSignaturePageState extends State<TaskSignaturePage> {
           ),
         ),
       ),
-      persistentFooterButtons: [
-        CustomElevatedButton(
-          onPressed: () async {
-            var bytes = await controller.toPngBytes();
-            bloc.saveSignature(bytes);
-            Modular.to.pop();
-          },
-          label: 'Salvar',
-        )
-      ],
-      body: bloc.state.answers.signature != null
+      persistentFooterButtons: bloc.state.image(TaskImageType.signature) == null
+          ? [
+              CustomElevatedButton(
+                onPressed: () async {
+                  var bytes = await controller.toPngBytes();
+                  bloc.saveSignature(bytes);
+                  Modular.to.pop();
+                },
+                label: 'Salvar',
+              )
+            ]
+          : null,
+      body: bloc.state.image(TaskImageType.signature) != null
           ? Center(
-              child: Image.file(File(bloc.state.answers.signature!.file!.path)),
+              child: Image.file(
+                  File(bloc.state.image(TaskImageType.signature)!.file!.path)),
             )
-          : Container(
-              color: Colors.white,
-              child: Signature(
-                controller: controller,
-                backgroundColor: Colors.white,
-              ),
+          : Signature(
+              controller: controller,
+              backgroundColor: Colors.white,
             ),
     );
   }

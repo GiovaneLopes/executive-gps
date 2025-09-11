@@ -8,12 +8,6 @@ part of 'task_model.dart';
 
 TaskModel _$TaskModelFromJson(Map<String, dynamic> json) => TaskModel(
       id: json['id'] as String?,
-      customer: json['customer'] == null
-          ? null
-          : CustomerModel.fromJson(json['customer'] as Map<String, dynamic>),
-      employee: json['employee'] == null
-          ? null
-          : EmployeeModel.fromJson(json['employee'] as Map<String, dynamic>),
       step: $enumDecodeNullable(_$TaskStepEnumMap, json['step']) ??
           TaskStep.scheduled,
       customerId: json['customerId'] as String,
@@ -23,15 +17,10 @@ TaskModel _$TaskModelFromJson(Map<String, dynamic> json) => TaskModel(
       dueDate: DateTime.parse(json['dueDate'] as String),
       vehiclePlate: json['vehiclePlate'] as String,
       observation: json['observation'] as String?,
-      answers: json['answers'] == null
-          ? null
-          : TaskAnswersModel.fromJson(json['answers'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
       'id': instance.id,
-      'customer': instance.customer?.toJson(),
-      'employee': instance.employee?.toJson(),
       'customerId': instance.customerId,
       'employeeId': instance.employeeId,
       'step': _$TaskStepEnumMap[instance.step]!,
@@ -40,7 +29,6 @@ Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
       'dueDate': instance.dueDate.toIso8601String(),
       'vehiclePlate': instance.vehiclePlate,
       'observation': instance.observation,
-      'answers': instance.answers?.toJson(),
     };
 
 const _$TaskStepEnumMap = {

@@ -11,7 +11,9 @@ part 'task_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class TaskModel extends Equatable {
   final String? id;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final CustomerModel? customer;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final EmployeeModel? employee;
   final String customerId;
   final String employeeId;
@@ -21,7 +23,6 @@ class TaskModel extends Equatable {
   final DateTime dueDate;
   final String vehiclePlate;
   final String? observation;
-  final TaskAnswersModel? answers;
 
   const TaskModel({
     this.id,
@@ -35,7 +36,6 @@ class TaskModel extends Equatable {
     required this.dueDate,
     required this.vehiclePlate,
     this.observation,
-    this.answers,
   });
 
   TaskModel copyWith({
@@ -64,7 +64,6 @@ class TaskModel extends Equatable {
       dueDate: dueDate ?? this.dueDate,
       vehiclePlate: vehiclePlate ?? this.vehiclePlate,
       observation: observation ?? this.observation,
-      answers: answers ?? this.answers,
     );
   }
 
@@ -85,6 +84,5 @@ class TaskModel extends Equatable {
         dueDate,
         vehiclePlate,
         observation,
-        answers,
       ];
 }
