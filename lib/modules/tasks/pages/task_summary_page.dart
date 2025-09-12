@@ -51,6 +51,7 @@ class _TaskSummaryPageState extends State<TaskSummaryPage> {
           builder: (context, state) {
             return CustomElevatedButton(
               loading: state.status == TaskEmployeeStatus.loading,
+              enabled: state.status != TaskEmployeeStatus.loading,
               onPressed: bloc.sendAnswers,
               label: 'Finalizar',
             );

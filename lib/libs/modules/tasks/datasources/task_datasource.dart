@@ -72,10 +72,20 @@ class TaskDatasourceImpl implements TaskDatasource {
   @override
   Future<void> addTask(TaskModel task) async {
     await _safeCall(() async {
+      final identifier = await db.collection('tasks').doc('identifier').get();
+      final newIdentifier = (identifier.data()?['data'] ?? 0);
+      await db
+          .collection('tasks')
+          .doc('identifier')
+          .set({'data': (identifier.data()?['data'] ?? 0) + 1});
       final tasksRef = db.collection('tasks');
       final novoUsuarioRef = tasksRef.doc();
-      await tasksRef.doc(novoUsuarioRef.id).set(task.toJson());
-      clearTasks();
+      await tasksRef.doc(novoUsuarioRef.id).set(task
+          .copyWith(
+            identifier:
+                '${(newIdentifier + 1).toString().padLeft(3, '0')}/${(DateTime.now().year % 100).toString().padLeft(2, '0')}',
+          )
+          .toJson());
     });
   }
 
@@ -83,7 +93,6 @@ class TaskDatasourceImpl implements TaskDatasource {
   Future<void> updateTask(TaskModel task) async {
     await _safeCall(() async {
       await db.collection('tasks').doc(task.id).update(task.toJson());
-      clearTasks();
     });
   }
 
@@ -96,7 +105,6 @@ class TaskDatasourceImpl implements TaskDatasource {
           .collection('task_answers')
           .doc(id)
           .set(answers.copyWith(images: newImages).toJson());
-      clearTasks();
     });
   }
 

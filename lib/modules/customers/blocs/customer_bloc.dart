@@ -152,14 +152,6 @@ class CustomerBloc extends Cubit<CustomerState> {
     ));
   }
 
-  void selectImage(ImageModel? image) {
-    emit(state.copyWith(
-      selectedImage: image,
-      route: CustomerRoutes.imageDetails,
-      status: CustomerStatus.initial,
-    ));
-  }
-
   void deleteImage(ImageModel image) {
     if (image.url != null) {
       emit(

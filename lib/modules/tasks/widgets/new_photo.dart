@@ -29,7 +29,8 @@ class NewPhoto extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () => Modular.to
+                        .pushNamed('/image-details', arguments: image),
                     child: Container(
                       width: 125.w,
                       height: 125.w,

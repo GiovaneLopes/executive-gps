@@ -19,7 +19,7 @@ class TaskModel extends Equatable {
   final String employeeId;
   final TaskStep step;
   final TaskType type;
-  final String identifier;
+  final String? identifier;
   final DateTime dueDate;
   final String vehiclePlate;
   final String? observation;
@@ -32,7 +32,7 @@ class TaskModel extends Equatable {
     required this.customerId,
     required this.employeeId,
     required this.type,
-    required this.identifier,
+    this.identifier,
     required this.dueDate,
     required this.vehiclePlate,
     this.observation,

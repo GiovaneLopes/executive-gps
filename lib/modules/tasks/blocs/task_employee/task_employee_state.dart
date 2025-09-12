@@ -6,6 +6,7 @@ class TaskEmployeeState extends Equatable {
   final TaskModel? selectedTask;
   final TaskAnswersModel answers;
   final List<TaskImageModel> images;
+  final AppError? error;
 
   const TaskEmployeeState({
     this.route,
@@ -13,6 +14,7 @@ class TaskEmployeeState extends Equatable {
     this.selectedTask,
     this.answers = const TaskAnswersModel(),
     this.images = const [],
+    this.error,
   });
 
   TaskEmployeeState copyWith({
@@ -21,6 +23,7 @@ class TaskEmployeeState extends Equatable {
     TaskModel? selectedTask,
     TaskAnswersModel? answers,
     List<TaskImageModel>? images,
+    AppError? error,
   }) {
     return TaskEmployeeState(
       route: route?..navigate(),
@@ -28,6 +31,7 @@ class TaskEmployeeState extends Equatable {
       selectedTask: selectedTask ?? this.selectedTask,
       answers: answers ?? this.answers,
       images: images ?? this.images,
+      error: error ?? this.error,
     );
   }
 
@@ -47,6 +51,7 @@ class TaskEmployeeState extends Equatable {
         answers,
         status,
         images,
+        error,
       ];
 
   TaskImageModel? image(TaskImageType type) => images.isEmpty

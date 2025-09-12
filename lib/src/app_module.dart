@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/shared/ui/image_details_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:executive_gps/modules/home/home_routes.dart';
 import 'package:executive_gps/modules/home/home_module.dart';
@@ -26,6 +27,10 @@ class AppModule extends Module {
     r.child(
       '/',
       child: (context) => const SplashPage(),
+    );
+    r.child(
+      '/image-details',
+      child: (context) => const ImageDetailsPage(),
     );
     r.module(
       AuthRoutes.splash.module,

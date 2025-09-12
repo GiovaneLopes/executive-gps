@@ -306,8 +306,9 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                             alignment: Alignment.center,
                             children: [
                               InkWell(
-                                onTap: () =>
-                                    bloc.selectImage(state.images[index]),
+                                onTap: () => Modular.to.pushNamed(
+                                    '/image-details',
+                                    arguments: state.images[index]),
                                 child: Container(
                                   width: 100.w,
                                   height: 100.w,

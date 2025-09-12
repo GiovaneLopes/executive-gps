@@ -28,7 +28,6 @@ class AuthBloc extends Cubit<AuthState> {
   void getUser() async {
     try {
       final user = await repository.getCurrentUser();
-
       emit(
         state.copyWith(
           route: user != null ? HomeRoutes.home : AuthRoutes.signIn,

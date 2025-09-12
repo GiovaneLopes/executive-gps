@@ -1,18 +1,14 @@
 import 'dart:io';
+import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageDetailsPage extends StatelessWidget {
-  final String? url;
-  final String? filePath;
-  const ImageDetailsPage({
-    super.key,
-    this.url,
-    this.filePath,
-  });
+  const ImageDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final image = ModalRoute.of(context)!.settings.arguments as ImageModel?;
     return Scaffold(
       appBar: AppBar(),
       body: SizedBox(
@@ -23,15 +19,15 @@ class ImageDetailsPage extends StatelessWidget {
           children: [
             Expanded(
               child: InteractiveViewer(
-                child: url == null
+                child: image?.url == null
                     ? Center(
                         child: Image.file(
-                          File(filePath ?? ''),
+                          File(image?.file?.path ?? ''),
                         ),
                       )
                     : Center(
                         child: CachedNetworkImage(
-                          imageUrl: url ?? '',
+                          imageUrl: image?.url ?? '',
                           fit: BoxFit.contain,
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
 import 'package:executive_gps/modules/customers/widgets/info_line.dart';
@@ -68,6 +69,11 @@ class TaskSummary extends StatelessWidget {
                           label: 'Quilometragem',
                           value: '${answers.km} km',
                         ),
+                        const Divider(),
+                        InfoLine(
+                          label: 'Luz de injeção (ABS/Air Bag)',
+                          value: '${answers.injectionLight ? 'Sim' : 'Não'} ',
+                        ),
                         Visibility(
                           visible: answers.observation != null &&
                               answers.observation!.isNotEmpty,
@@ -82,17 +88,15 @@ class TaskSummary extends StatelessWidget {
                           ),
                         ),
                         const Divider(),
-                        _photoContent(
-                          'Assinatura',
-                          state.image(TaskImageType.signature)?.url,
-                          state.image(TaskImageType.signature)?.file?.path,
-                        ),
+                        _photoContent('Assinatura do cliente',
+                            state.image(TaskImageType.signature)),
                         SizedBox(height: 12.h)
                       ],
                     ),
                   ),
                 ],
               ),
+              const Divider(),
               ExpansionTile(
                 title: Row(
                   children: [
@@ -115,33 +119,31 @@ class TaskSummary extends StatelessWidget {
                     children: [
                       _photoContent(
                         'Local do cliente',
-                        state.image(TaskImageType.customerPlace)?.url,
-                        state.image(TaskImageType.customerPlace)?.file?.path,
+                        state.image(TaskImageType.customerPlace),
                       ),
                       _photoContent(
                         'Id do equipamento',
-                        state.image(TaskImageType.equipmentId)?.url,
-                        state.image(TaskImageType.equipmentId)?.file?.path,
+                        state.image(TaskImageType.equipmentId),
                       ),
                       _photoContent(
                         'Chassi do veículo',
-                        state.image(TaskImageType.chassi)?.url,
-                        state.image(TaskImageType.chassi)?.file?.path,
+                        state.image(TaskImageType.chassi),
                       ),
                       _photoContent(
                         'Frontal veículo',
-                        state.image(TaskImageType.vehicleFront)?.url,
-                        state.image(TaskImageType.vehicleFront)?.file?.path,
+                        state.image(TaskImageType.vehicleFront),
                       ),
                       _photoContent(
                         'Fiação',
-                        state.image(TaskImageType.wiring)?.url,
-                        state.image(TaskImageType.wiring)?.file?.path,
+                        state.image(TaskImageType.wiring),
                       ),
                       _photoContent(
                         'Adicional (opcional)',
-                        state.image(TaskImageType.additional)?.url,
-                        state.image(TaskImageType.additional)?.file?.path,
+                        state.image(TaskImageType.additional),
+                      ),
+                      _photoContent(
+                        'Adicional (opcional)',
+                        state.image(TaskImageType.additional),
                       ),
                     ],
                   ),
@@ -153,33 +155,40 @@ class TaskSummary extends StatelessWidget {
         });
   }
 
-  Widget _photoContent(String title, String? url, String? path) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: Styles.bodySmall,
-        ),
-        SizedBox(height: 12.h),
-        Container(
-          width: 125.w,
-          height: 125.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            border: Border.all(color: AppColors.grey, width: 1.w),
-            image: url != null
-                ? DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(url),
-                  )
-                : DecorationImage(
-                    fit: BoxFit.cover,
-                    image: FileImage(File(path ?? '')),
-                  ),
+  Widget _photoContent(String title, ImageModel? image) {
+    return Visibility(
+      visible: image?.url != null || image?.file?.path != null,
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: Styles.bodySmall,
           ),
-          child: const SizedBox(),
-        ),
-      ],
+          SizedBox(height: 12.h),
+          InkWell(
+            onTap: () =>
+                Modular.to.pushNamed('/image-details', arguments: image),
+            child: Container(
+              width: 125.w,
+              height: 125.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(color: AppColors.grey, width: 1.w),
+                image: image?.url != null
+                    ? DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(image?.url ?? ''),
+                      )
+                    : DecorationImage(
+                        fit: BoxFit.cover,
+                        image: FileImage(File(image?.file?.path ?? '')),
+                      ),
+              ),
+              child: const SizedBox(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

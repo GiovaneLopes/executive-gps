@@ -3,6 +3,7 @@ import 'dart:io';
 // ignore: depend_on_referenced_packages
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
@@ -134,6 +135,7 @@ class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
       );
       emit(state.copyWith(status: TaskEmployeeStatus.success));
     } catch (e) {
+      debugPrint('### error: $e');
       emit(state.copyWith(status: TaskEmployeeStatus.error));
     }
   }
