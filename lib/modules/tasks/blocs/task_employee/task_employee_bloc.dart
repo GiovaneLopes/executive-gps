@@ -1,20 +1,19 @@
 import 'dart:io';
-
-// ignore: depend_on_referenced_packages
-import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:executive_gps/libs/exceptions/app_error.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
-import 'package:executive_gps/libs/modules/tasks/repositories/task_repository.dart';
-import 'package:executive_gps/modules/shared/utils/app_route.dart';
-import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:executive_gps/libs/exceptions/app_error.dart';
+import 'package:executive_gps/modules/tasks/task_routes.dart';
+import 'package:executive_gps/modules/shared/utils/app_route.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
+import 'package:executive_gps/libs/modules/tasks/repositories/task_repository.dart';
 
 part './task_employee_state.dart';
 
@@ -126,6 +125,10 @@ class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
     );
   }
 
+  void summaryRequested() {
+    emit(state.copyWith(route: TaskRoutes.summary));
+  }
+
   void sendAnswers() async {
     emit(state.copyWith(status: TaskEmployeeStatus.loading));
     try {
@@ -133,15 +136,16 @@ class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
         state.selectedTask?.id ?? '',
         state.answers.copyWith(images: state.images),
       );
-      emit(state.copyWith(status: TaskEmployeeStatus.success));
+      emit(state.copyWith(
+        status: TaskEmployeeStatus.success,
+        selectedTask: state.selectedTask?.copyWith(
+          step: TaskStep.completed,
+        ),
+      ));
     } catch (e) {
       debugPrint('### error: $e');
       emit(state.copyWith(status: TaskEmployeeStatus.error));
     }
-  }
-
-  void summaryRequested() {
-    emit(state.copyWith(route: TaskRoutes.summary));
   }
 
   void clear() {

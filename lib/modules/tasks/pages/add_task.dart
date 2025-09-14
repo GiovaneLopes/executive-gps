@@ -71,12 +71,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
         employeeId: employeeId ?? '',
         vehiclePlate: vehiclePlateController.text,
         observation: observationController.text,
+        identifier: bloc.state.selectedTask?.identifier,
       );
-      if (bloc.state.selectedTask != null) {
-        bloc.updateTask(task);
-      } else {
-        bloc.addTask(task);
-      }
+      bloc.addTask(task);
     }
   }
 

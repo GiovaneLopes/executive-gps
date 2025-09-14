@@ -1,8 +1,4 @@
 import 'dart:async';
-import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
-import 'package:executive_gps/modules/shared/utils/task_list_extension.dart';
-import 'package:executive_gps/modules/tasks/blocs/task_employee/task_employee_bloc.dart';
-import 'package:executive_gps/modules/tasks/widgets/task_content.dart';
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,12 +7,16 @@ import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:executive_gps/modules/shared/utils/app_route.dart';
+import 'package:executive_gps/modules/tasks/widgets/task_content.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:executive_gps/modules/customers/blocs/customer_bloc.dart';
 import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
+import 'package:executive_gps/modules/shared/utils/task_list_extension.dart';
 import 'package:executive_gps/libs/modules/employees/models/employee_model.dart';
 import 'package:executive_gps/libs/modules/customers/models/customer_model.dart';
 import 'package:executive_gps/libs/modules/tasks/repositories/task_repository.dart';
+import 'package:executive_gps/modules/tasks/blocs/task_employee/task_employee_bloc.dart';
 
 part 'task_state.dart';
 
@@ -75,7 +75,7 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
         taskEmployeeBloc.stream.listen((taskEmployeeState) {
       if (taskEmployeeState.status == TaskEmployeeStatus.success &&
           taskEmployeeState.selectedTask != null) {
-        updateTaskStep(taskEmployeeState.selectedTask!.id ?? '');
+        updateTaskStep(taskEmployeeState.selectedTask);
       }
     });
   }
@@ -122,40 +122,24 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
   void addTask(TaskModel task) async {
     try {
       emit(state.copyWith(status: TaskStatus.loading));
-      await repository.addTask(task);
+      final result = task.id != null
+          ? await repository.updateTask(task)
+          : await repository.addTask(task);
       emit(
         state.copyWith(
           status: TaskStatus.success,
-          selectedTask: () => task,
+          selectedTask: () => result,
           tasks: [
-            ...state.tasks,
-            task.copyWith(
+            ...state.tasks.where((task) => task.id != result.id),
+            result.copyWith(
               customer: customerBloc.state.customers
-                  .firstWhere((c) => c.id == task.customerId),
+                  .firstWhere((c) => c.id == result.customerId),
               employee: employeeBloc.state.employees
-                  .firstWhere((e) => e.id == task.employeeId),
+                  .firstWhere((e) => e.id == result.employeeId),
             )
           ],
         ),
       );
-    } catch (e) {
-      debugPrint('### Error adding task: $e');
-      emit(state.copyWith(
-        status: TaskStatus.error,
-        error: e as AppError,
-      ));
-    }
-  }
-
-  void updateTask(TaskModel task) async {
-    try {
-      emit(state.copyWith(status: TaskStatus.loading));
-      await repository.updateTask(task);
-      emit(state.copyWith(
-        status: TaskStatus.success,
-        selectedTask: () => task,
-        tasks: [...state.tasks.where((t) => t.id != task.id), task],
-      ));
     } catch (e) {
       debugPrint('### Error adding task: $e');
       emit(state.copyWith(
@@ -189,7 +173,6 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
             state.tasks.where((t) => t.id != state.selectedTask!.id).toList(),
         selectedTask: () => null,
       ));
-      getTasks();
     } catch (e) {
       debugPrint('### Error deleting task: $e');
       emit(state.copyWith(
@@ -199,14 +182,17 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
     }
   }
 
-  void updateTaskStep(String id) {
-    final tasks = state.tasks;
-    final index = tasks.indexWhere((t) => t.id == id);
-
-    if (index >= 0) {
-      tasks[index] = tasks[index].copyWith(step: TaskStep.completed);
-    }
-    emit(state.copyWith(tasks: tasks));
+  void updateTaskStep(TaskModel? completedTask) {
+    emit(
+      state.copyWith(
+        tasks: completedTask != null
+            ? state.tasks
+                .map((task) =>
+                    task.id == completedTask.id ? completedTask : task)
+                .toList()
+            : state.tasks,
+      ),
+    );
   }
 
   void toggleView() {

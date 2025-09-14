@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:developer';
-import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,11 +8,13 @@ import 'package:executive_gps/libs/utils/network_checker.dart';
 import 'package:executive_gps/libs/exceptions/generic_errors.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 
 abstract class TaskDatasource {
   Future<List<TaskModel>> getTasks(String? employeeId);
-  Future<void> addTask(TaskModel task);
-  Future<void> updateTask(TaskModel task);
+  Future<TaskModel> addTask(TaskModel task);
+  Future<TaskModel> updateTask(TaskModel task);
   Future<void> saveTaskAnswers(String id, TaskAnswersModel answers);
   Future<void> deleteTask(String taskId);
   Future<void> clearTasks();
@@ -63,36 +63,30 @@ class TaskDatasourceImpl implements TaskDatasource {
   }
 
   @override
-  Future<void> clearTasks() async {
-    hasMore = true;
-    _lastDocument = null;
-    _documents.clear();
-  }
-
-  @override
-  Future<void> addTask(TaskModel task) async {
-    await _safeCall(() async {
+  Future<TaskModel> addTask(TaskModel task) async {
+    return await _safeCall(() async {
       final identifier = await db.collection('tasks').doc('identifier').get();
       final newIdentifier = (identifier.data()?['data'] ?? 0);
       await db
           .collection('tasks')
           .doc('identifier')
           .set({'data': (identifier.data()?['data'] ?? 0) + 1});
+      final newTask = task.copyWith(
+        identifier:
+            '${(newIdentifier + 1).toString().padLeft(3, '0')}/${(DateTime.now().year % 100).toString().padLeft(2, '0')}',
+      );
       final tasksRef = db.collection('tasks');
       final novoUsuarioRef = tasksRef.doc();
-      await tasksRef.doc(novoUsuarioRef.id).set(task
-          .copyWith(
-            identifier:
-                '${(newIdentifier + 1).toString().padLeft(3, '0')}/${(DateTime.now().year % 100).toString().padLeft(2, '0')}',
-          )
-          .toJson());
+      await tasksRef.doc(novoUsuarioRef.id).set(newTask.toJson());
+      return newTask;
     });
   }
 
   @override
-  Future<void> updateTask(TaskModel task) async {
-    await _safeCall(() async {
+  Future<TaskModel> updateTask(TaskModel task) async {
+    return await _safeCall(() async {
       await db.collection('tasks').doc(task.id).update(task.toJson());
+      return task;
     });
   }
 
@@ -137,6 +131,13 @@ class TaskDatasourceImpl implements TaskDatasource {
         await ref.delete();
       }
     });
+  }
+
+  @override
+  Future<void> clearTasks() async {
+    hasMore = true;
+    _lastDocument = null;
+    _documents.clear();
   }
 
   @override

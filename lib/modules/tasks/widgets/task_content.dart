@@ -1,4 +1,3 @@
-import 'package:executive_gps/modules/tasks/widgets/task_expansion_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -8,6 +7,7 @@ import 'package:executive_gps/modules/tasks/widgets/task_card.dart';
 import 'package:executive_gps/modules/shared/resources/styles.dart';
 import 'package:executive_gps/modules/tasks/blocs/task/task_bloc.dart';
 import 'package:executive_gps/modules/shared/resources/app_colors.dart';
+import 'package:executive_gps/modules/tasks/widgets/task_expansion_tile.dart';
 
 enum FilterType {
   today,
@@ -84,6 +84,37 @@ class _TasksContentState extends State<TasksContent> {
                   ],
                 ),
               ),
+              Visibility(
+                visible: state.tasks.isNotEmpty,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: List.generate(
+                        FilterType.values.length,
+                        (index) => Padding(
+                          padding: EdgeInsets.only(right: 12.w),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w, vertical: 6.h),
+                              backgroundColor:
+                                  state.filter == FilterType.values[index]
+                                      ? AppColors.primary
+                                      : Colors.transparent,
+                            ),
+                            onPressed: () =>
+                                bloc.selectFilter(FilterType.values[index]),
+                            child: Text(
+                              FilterType.values[index].name,
+                              style: Styles.bodySmall,
+                            ),
+                          ),
+                        ),
+                      ).toList()),
+                ),
+              ),
               if (state.status == TaskStatus.loading && state.tasks.isEmpty)
                 const Expanded(
                   child: Center(
@@ -92,7 +123,7 @@ class _TasksContentState extends State<TasksContent> {
                     ),
                   ),
                 )
-              else if (state.tasks.isEmpty)
+              else if (state.filteredTasks.isEmpty)
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -112,34 +143,6 @@ class _TasksContentState extends State<TasksContent> {
                 Expanded(
                   child: Column(
                     children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: List.generate(
-                              FilterType.values.length,
-                              (index) => Padding(
-                                padding: EdgeInsets.only(right: 12.w),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w, vertical: 6.h),
-                                    backgroundColor:
-                                        state.filter == FilterType.values[index]
-                                            ? AppColors.primary
-                                            : Colors.transparent,
-                                  ),
-                                  onPressed: () => bloc
-                                      .selectFilter(FilterType.values[index]),
-                                  child: Text(
-                                    FilterType.values[index].name,
-                                    style: Styles.bodySmall,
-                                  ),
-                                ),
-                              ),
-                            ).toList()),
-                      ),
                       Expanded(
                         child: ListView.builder(
                           controller: _scrollController,

@@ -1,11 +1,11 @@
-import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 import 'package:executive_gps/libs/modules/tasks/datasources/task_datasource.dart';
 
 abstract class TaskRepository {
   Future<List<TaskModel>> getTasks(String? employeeId);
-  Future<void> addTask(TaskModel task);
-  Future<void> updateTask(TaskModel task);
+  Future<TaskModel> addTask(TaskModel task);
+  Future<TaskModel> updateTask(TaskModel task);
   Future<void> saveTaskAnswers(String id, TaskAnswersModel answers);
   Future<void> deleteTask(String taskId);
   Future<void> clearTasks();
@@ -22,12 +22,12 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<void> addTask(TaskModel task) {
+  Future<TaskModel> addTask(TaskModel task) {
     return datasource.addTask(task);
   }
 
   @override
-  Future<void> updateTask(TaskModel task) {
+  Future<TaskModel> updateTask(TaskModel task) {
     return datasource.updateTask(task);
   }
 
