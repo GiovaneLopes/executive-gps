@@ -7,6 +7,8 @@ class TaskState extends Equatable {
   final TaskModel? selectedTask;
   final TaskStatus status;
   final bool hasMore;
+  final FilterType? filter;
+  final bool viewMode;
   final AppError? error;
 
   const TaskState({
@@ -16,10 +18,35 @@ class TaskState extends Equatable {
     this.selectedTask,
     this.status = TaskStatus.initial,
     this.hasMore = false,
+    this.filter,
     this.error,
+    this.viewMode = true,
   });
 
   bool get isAdmin => user?.isAdmin ?? false;
+
+  List<TaskModel> get orderTasks {
+    final List<TaskModel> ordered = List.from(filteredTasks);
+    ordered.sort((a, b) {
+      return b.dueDate.compareTo(a.dueDate);
+    });
+    return ordered;
+  }
+
+  List<TaskModel> get filteredTasks {
+    switch (filter) {
+      case FilterType.today:
+        return tasks.todayTasks;
+      case FilterType.completed:
+        return tasks.completedTasks;
+      case FilterType.canceled:
+        return tasks.canceledTasks;
+      case FilterType.scheduled:
+        return tasks.scheduledTasks;
+      default:
+        return tasks;
+    }
+  }
 
   TaskState copyWith({
     AppRoute? route,
@@ -29,6 +56,9 @@ class TaskState extends Equatable {
     TaskStatus? status,
     AppError? error,
     bool? hasMore,
+    FilterType? filter,
+    bool setFilterToNull = false,
+    bool? viewMode,
   }) {
     return TaskState(
       route: route?..navigate(),
@@ -38,6 +68,8 @@ class TaskState extends Equatable {
       status: status ?? this.status,
       error: error ?? this.error,
       hasMore: hasMore ?? this.hasMore,
+      filter: setFilterToNull ? null : (filter ?? this.filter),
+      viewMode: viewMode ?? this.viewMode,
     );
   }
 
@@ -49,5 +81,7 @@ class TaskState extends Equatable {
         status,
         error,
         hasMore,
+        filter,
+        viewMode,
       ];
 }

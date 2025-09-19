@@ -1,6 +1,7 @@
 import 'package:executive_gps/modules/tasks/pages/task_checklist_page.dart';
 import 'package:executive_gps/modules/tasks/pages/task_photos_page.dart';
 import 'package:executive_gps/modules/tasks/pages/task_signature_page.dart';
+import 'package:executive_gps/modules/tasks/pages/task_summary_page.dart';
 import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:executive_gps/modules/tasks/pages/add_task.dart';
@@ -38,5 +39,6 @@ class TaskModule extends Module {
     r.child(TaskRoutes.checklist.name, child: (_) => const TaskChecklistPage());
     r.child(TaskRoutes.signature.name, child: (_) => const TaskSignaturePage());
     r.child(TaskRoutes.photos.name, child: (_) => const TaskPhotosPage());
+    r.child(TaskRoutes.summary.name, child: (_) => const TaskSummaryPage());
   }
 }

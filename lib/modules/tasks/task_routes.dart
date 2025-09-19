@@ -12,4 +12,5 @@ class TaskRoutes extends AppRoute {
   static final imageDetails = TaskRoutes('/image-details');
   static final signature = TaskRoutes('/signature');
   static final photos = TaskRoutes('/photos');
+  static final summary = TaskRoutes('/summary');
 }

@@ -1,6 +1,6 @@
 import 'package:executive_gps/modules/customers/widgets/info_line.dart';
+import 'package:executive_gps/modules/shared/utils/contact_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -95,7 +95,8 @@ class CustomerTile extends StatelessWidget {
                           SizedBox(width: 2.w),
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () => bloc.selectImage(customer.images[index]),
+                          onTap: () => Modular.to.pushNamed('/image-details',
+                              arguments: customer.images[index]),
                           child: Container(
                             width: 80.w,
                             decoration: BoxDecoration(
@@ -124,13 +125,7 @@ class CustomerTile extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 ),
-                onPressed: () {
-                  final Uri launchUri = Uri(
-                    scheme: 'tel',
-                    path: customer.mobile,
-                  );
-                  launchUrl(launchUri);
-                },
+                onPressed: () => ContactHelper.call(customer.mobile),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -159,11 +154,7 @@ class CustomerTile extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 ),
-                onPressed: () {
-                  String whatsappUrl =
-                      'whatsapp://send?phone=${customer.mobile}';
-                  launchUrl(Uri.parse(whatsappUrl));
-                },
+                onPressed: () => ContactHelper.whatsapp(customer.mobile),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

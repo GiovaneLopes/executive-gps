@@ -168,14 +168,6 @@ class EmployeeBloc extends Cubit<EmployeeState> {
     ));
   }
 
-  void selectImage(ImageModel? image) {
-    emit(state.copyWith(
-      selectedImage: image,
-      route: EmployeeRoutes.imageDetails,
-      status: EmployeeStatus.initial,
-    ));
-  }
-
   void deleteImage(ImageModel image) {
     if (image.url != null) {
       emit(

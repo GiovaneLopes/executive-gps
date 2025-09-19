@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
-import 'package:executive_gps/modules/tasks/blocs/task_employee/task_employee_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,12 +7,16 @@ import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:executive_gps/modules/shared/utils/app_route.dart';
+import 'package:executive_gps/modules/tasks/widgets/task_content.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:executive_gps/modules/customers/blocs/customer_bloc.dart';
 import 'package:executive_gps/modules/employees/blocs/employee_bloc.dart';
+import 'package:executive_gps/modules/shared/utils/task_list_extension.dart';
 import 'package:executive_gps/libs/modules/employees/models/employee_model.dart';
 import 'package:executive_gps/libs/modules/customers/models/customer_model.dart';
 import 'package:executive_gps/libs/modules/tasks/repositories/task_repository.dart';
+import 'package:executive_gps/modules/tasks/blocs/task_employee/task_employee_bloc.dart';
 
 part 'task_state.dart';
 
@@ -27,7 +29,7 @@ enum TaskStatus {
 }
 
 class TaskBloc extends Cubit<TaskState> implements Disposable {
-  final TaskRepository taskRepository;
+  final TaskRepository repository;
   final CustomerBloc customerBloc;
   final EmployeeBloc employeeBloc;
   final TaskEmployeeBloc taskEmployeeBloc;
@@ -35,9 +37,10 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
 
   late StreamSubscription<CustomerState> _blocCustomerSubscription;
   late StreamSubscription<EmployeeState> _blocEmployeeSubscription;
+  late StreamSubscription<TaskEmployeeState> _blocTaskEmployeeSubscription;
   late StreamSubscription<AuthState> _blocAuthSubscription;
   TaskBloc(
-    this.taskRepository,
+    this.repository,
     this.customerBloc,
     this.employeeBloc,
     this.taskEmployeeBloc,
@@ -59,13 +62,20 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
     });
     _blocAuthSubscription = authBloc.stream.listen((authState) {
       if (authState.status == AuthStatus.unauthenticated) {
+        repository.clearTasks();
         emit(const TaskState());
-        taskRepository.clearTasks();
       }
       if (customerBloc.state.status == CustomerStatus.loaded &&
           employeeBloc.state.status == EmployeeStatus.loaded &&
           authState.status == AuthStatus.authenticated) {
         _checkLoad();
+      }
+    });
+    _blocTaskEmployeeSubscription =
+        taskEmployeeBloc.stream.listen((taskEmployeeState) {
+      if (taskEmployeeState.status == TaskEmployeeStatus.success &&
+          taskEmployeeState.selectedTask != null) {
+        updateTaskStep(taskEmployeeState.selectedTask);
       }
     });
   }
@@ -81,7 +91,7 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
     try {
       emit(state.copyWith(status: TaskStatus.loading));
       final employeeId = state.isAdmin ? null : state.user?.id;
-      final tasks = await taskRepository.getTasks(employeeId);
+      final tasks = await repository.getTasks(employeeId);
       final realTasks = await Future.wait(tasks.map((task) async {
         final customer = customerBloc.state.customers
             .where((customer) => customer.id == task.customerId)
@@ -97,7 +107,7 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
       emit(
         state.copyWith(
           tasks: realTasks.isEmpty ? state.tasks : realTasks,
-          hasMore: tasks.length > state.tasks.length,
+          hasMore: tasks.length > state.tasks.length && tasks.length >= 10,
           status: TaskStatus.loaded,
         ),
       );
@@ -112,34 +122,24 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
   void addTask(TaskModel task) async {
     try {
       emit(state.copyWith(status: TaskStatus.loading));
-      await taskRepository.addTask(task);
+      final result = task.id != null
+          ? await repository.updateTask(task)
+          : await repository.addTask(task);
       emit(
         state.copyWith(
           status: TaskStatus.success,
-          selectedTask: () => task,
+          selectedTask: () => result,
+          tasks: [
+            ...state.tasks.where((task) => task.id != result.id),
+            result.copyWith(
+              customer: customerBloc.state.customers
+                  .firstWhere((c) => c.id == result.customerId),
+              employee: employeeBloc.state.employees
+                  .firstWhere((e) => e.id == result.employeeId),
+            )
+          ],
         ),
       );
-      getTasks();
-    } catch (e) {
-      debugPrint('### Error adding task: $e');
-      emit(state.copyWith(
-        status: TaskStatus.error,
-        error: e as AppError,
-      ));
-    }
-  }
-
-  void updateTask(TaskModel task) async {
-    try {
-      emit(state.copyWith(status: TaskStatus.loading));
-      await taskRepository.updateTask(task);
-      emit(
-        state.copyWith(
-          status: TaskStatus.success,
-          selectedTask: () => task,
-        ),
-      );
-      getTasks();
     } catch (e) {
       debugPrint('### Error adding task: $e');
       emit(state.copyWith(
@@ -150,15 +150,11 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
   }
 
   void selectTask(TaskModel? task) {
-    emit(TaskState(
-      tasks: state.tasks,
-      user: state.user,
-    ));
-    if (state.isAdmin) {
+    if (state.isAdmin && task?.step != TaskStep.completed) {
       emit(
         state.copyWith(
           selectedTask: task != null ? () => task : () => null,
-          route: task?.step != TaskStep.completed ? TaskRoutes.add : null,
+          route: TaskRoutes.add,
         ),
       );
     } else {
@@ -170,10 +166,13 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
     if (state.selectedTask == null) return;
     try {
       emit(state.copyWith(status: TaskStatus.loading));
-      await taskRepository.deleteTask(state.selectedTask!.id ?? '');
-      emit(state.copyWith(status: TaskStatus.success));
-      await taskRepository.clearTasks();
-      getTasks();
+      await repository.deleteTask(state.selectedTask!.id ?? '');
+      emit(state.copyWith(
+        status: TaskStatus.success,
+        tasks:
+            state.tasks.where((t) => t.id != state.selectedTask!.id).toList(),
+        selectedTask: () => null,
+      ));
     } catch (e) {
       debugPrint('### Error deleting task: $e');
       emit(state.copyWith(
@@ -183,10 +182,37 @@ class TaskBloc extends Cubit<TaskState> implements Disposable {
     }
   }
 
+  void updateTaskStep(TaskModel? completedTask) {
+    emit(
+      state.copyWith(
+        tasks: completedTask != null
+            ? state.tasks
+                .map((task) =>
+                    task.id == completedTask.id ? completedTask : task)
+                .toList()
+            : state.tasks,
+      ),
+    );
+  }
+
+  void toggleView() {
+    emit(state.copyWith(viewMode: !state.viewMode));
+  }
+
+  void selectFilter(FilterType? filter) {
+    emit(
+      state.copyWith(
+        filter: state.filter == filter ? null : filter,
+        setFilterToNull: state.filter == filter,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _blocCustomerSubscription.cancel();
     _blocEmployeeSubscription.cancel();
+    _blocTaskEmployeeSubscription.cancel();
     _blocAuthSubscription.cancel();
     super.close();
   }

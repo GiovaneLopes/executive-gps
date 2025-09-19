@@ -1,5 +1,5 @@
+import 'package:executive_gps/modules/shared/utils/contact_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -89,7 +89,8 @@ class EmployeeTile extends StatelessWidget {
                           SizedBox(width: 2.w),
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () => bloc.selectImage(employee.images[index]),
+                          onTap: () => Modular.to.pushNamed('/image-details',
+                              arguments: employee.images[index]),
                           child: Container(
                             width: 80.w,
                             decoration: BoxDecoration(
@@ -118,13 +119,7 @@ class EmployeeTile extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 ),
-                onPressed: () {
-                  final Uri launchUri = Uri(
-                    scheme: 'tel',
-                    path: employee.mobile,
-                  );
-                  launchUrl(launchUri);
-                },
+                onPressed: () => ContactHelper.call(employee.mobile),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -153,11 +148,7 @@ class EmployeeTile extends StatelessWidget {
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 ),
-                onPressed: () {
-                  String whatsappUrl =
-                      'whatsapp://send?phone=${employee.mobile}';
-                  launchUrl(Uri.parse(whatsappUrl));
-                },
+                onPressed: () => ContactHelper.whatsapp(employee.mobile),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

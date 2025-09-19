@@ -1,4 +1,5 @@
 import 'package:executive_gps/modules/customers/widgets/info_line.dart';
+import 'package:executive_gps/modules/shared/utils/contact_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +10,6 @@ import 'package:executive_gps/modules/shared/resources/app_colors.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:executive_gps/modules/customers/widgets/info_action_line.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TaskCard extends StatelessWidget {
   final TaskModel task;
@@ -30,21 +30,11 @@ class TaskCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(
-                        FeatherIcons.calendar,
-                        color: AppColors.primaryDark,
-                        size: 16.w,
-                      ),
-                      SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
-                          '${task.dueDate.day.toString().padLeft(2, '0')}/${task.dueDate.month.toString().padLeft(2, '0')}/${task.dueDate.year} - ${task.dueDate.hour.toString().padLeft(2, '0')}h${task.dueDate.minute.toString().padLeft(2, '0')}',
-                          style: Styles.bodySmall.copyWith(
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          task.identifier ?? '',
+                          style: Styles.bodyMedium,
                         ),
                       ),
                       Row(
@@ -78,23 +68,33 @@ class TaskCard extends StatelessWidget {
                         size: 16.w,
                       ),
                       SizedBox(width: 4.w),
+                      Expanded(
+                        child: Text(
+                          task.customer?.name ?? 'Cliente não informado',
+                          style: Styles.bodySmall
+                              .copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Icon(
+                        FeatherIcons.calendar,
+                        color: AppColors.primaryDark,
+                        size: 16.w,
+                      ),
+                      SizedBox(width: 4.w),
                       Text(
-                        task.customer?.name ?? 'Cliente não informado',
-                        style: Styles.bodySmall
-                            .copyWith(fontWeight: FontWeight.w500),
+                        '${task.dueDate.day.toString().padLeft(2, '0')}/${task.dueDate.month.toString().padLeft(2, '0')}/${task.dueDate.year} - ${task.dueDate.hour.toString().padLeft(2, '0')}h${task.dueDate.minute.toString().padLeft(2, '0')}',
+                        style: Styles.bodySmall.copyWith(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(height: 8.h),
                   InfoAction.call(
                     value: task.customer?.mobile ?? 'Telefone não informado',
-                    onTap: () {
-                      final Uri launchUri = Uri(
-                        scheme: 'tel',
-                        path: task.customer?.mobile,
-                      );
-                      launchUrl(launchUri);
-                    },
+                    onPressed: () =>
+                        ContactHelper.call(task.customer?.mobile ?? ''),
                   ),
                   SizedBox(height: 8.h),
                   Row(

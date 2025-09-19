@@ -35,5 +35,9 @@ enum TaskStep {
     }
   }
 
-  static List<TaskStep> get allValues => TaskStep.values.toList();
+  static List<TaskStep> get creationTask => [
+        TaskStep.waiting,
+        TaskStep.scheduled,
+        TaskStep.canceled,
+      ];
 }

@@ -7,5 +7,4 @@ class CustomerRoutes extends AppRoute {
   CustomerRoutes(this.name, {this.type}) : super(module: '/customers');
 
   static final add = CustomerRoutes('/add');
-  static final imageDetails = CustomerRoutes('/image-details');
 }

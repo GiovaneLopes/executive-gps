@@ -7,8 +7,14 @@ class CustomElevatedButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool loading;
-  const CustomElevatedButton(
-      {super.key, required this.label, this.onPressed, this.loading = false});
+  final bool enabled;
+  const CustomElevatedButton({
+    super.key,
+    required this.label,
+    this.onPressed,
+    this.loading = false,
+    this.enabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +31,7 @@ class CustomElevatedButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
               ),
-              onPressed: onPressed,
+              onPressed: enabled ? onPressed : null,
               child: loading
                   ? SizedBox(
                       width: 20.w,

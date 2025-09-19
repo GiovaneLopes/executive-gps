@@ -63,21 +63,17 @@ class _AddTaskPageState extends State<AddTaskPage> {
   void validateForm() {
     if (formKey.currentState!.validate()) {
       final task = TaskModel(
-          id: bloc.state.selectedTask?.id,
-          step: step,
-          type: taskType ?? TaskType.installation,
-          dueDate: dueDate ?? DateTime.now(),
-          customerId: customerId ?? '',
-          employeeId: employeeId ?? '',
-          vehiclePlate: vehiclePlateController.text,
-          observation: observationController.text,
-          identifier:
-              'GPS:${(bloc.state.tasks.length + 1).toString().padLeft(5, '0')}');
-      if (bloc.state.selectedTask != null) {
-        bloc.updateTask(task);
-      } else {
-        bloc.addTask(task);
-      }
+        id: bloc.state.selectedTask?.id,
+        step: step,
+        type: taskType ?? TaskType.installation,
+        dueDate: dueDate ?? DateTime.now(),
+        customerId: customerId ?? '',
+        employeeId: employeeId ?? '',
+        vehiclePlate: vehiclePlateController.text,
+        observation: observationController.text,
+        identifier: bloc.state.selectedTask?.identifier,
+      );
+      bloc.addTask(task);
     }
   }
 
@@ -225,7 +221,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     SizedBox(height: 12.h),
                     CustomDropdownButtonFormField<TaskStep>(
                       initialValue: step,
-                      dropdownItems: TaskStep.allValues.map((step) {
+                      dropdownItems: TaskStep.creationTask.map((step) {
                         return DropdownMenuItem<TaskStep>(
                           value: step,
                           child: Text(step.toString()),

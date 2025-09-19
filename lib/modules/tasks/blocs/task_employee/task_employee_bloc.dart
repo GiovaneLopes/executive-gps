@@ -1,20 +1,32 @@
 import 'dart:io';
-
-import 'package:equatable/equatable.dart';
-import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
-import 'package:executive_gps/modules/shared/utils/app_route.dart';
-import 'package:executive_gps/modules/tasks/task_routes.dart';
 import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:executive_gps/libs/exceptions/app_error.dart';
+import 'package:executive_gps/modules/tasks/task_routes.dart';
+import 'package:executive_gps/modules/shared/utils/app_route.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_step.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_type.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
+import 'package:executive_gps/libs/modules/tasks/repositories/task_repository.dart';
 
 part './task_employee_state.dart';
 
+enum TaskEmployeeStatus {
+  initial,
+  loading,
+  success,
+  error,
+}
+
 class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
-  TaskEmployeeBloc() : super(const TaskEmployeeState());
+  final TaskRepository repository;
+  TaskEmployeeBloc(this.repository) : super(const TaskEmployeeState());
 
   Map<String, String?> checklist = {
     'Faróis': null,
@@ -39,12 +51,15 @@ class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
     'Blindado': null,
   };
 
-  void init(TaskModel? task) {
+  void init(TaskModel? task) async {
+    clear();
+    final answers = await repository.getAnswers(task?.id ?? '');
     emit(
       state.copyWith(
         selectedTask: task,
         route: TaskRoutes.details,
-        answers: task?.answers ?? TaskAnswersModel(checklist: checklist),
+        answers: answers ?? TaskAnswersModel(checklist: checklist),
+        images: answers?.images,
       ),
     );
   }
@@ -60,24 +75,25 @@ class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
 
   void saveSignature(Uint8List? path) async {
     final tempDir = await getTemporaryDirectory();
-    final fileName = '${DateTime.now()}.png';
+    const fileName = 'signature.png';
     final filePath = '${tempDir.path}/$fileName';
 
     final file = File(filePath);
-
     await file.writeAsBytes(path ?? Uint8List(0));
     emit(state.copyWith(
-      answers: state.answers.copyWith(
-        signature: () => path == null
-            ? null
-            : ImageModel(
-                file: XFile(
-                  file.path,
-                  name: fileName,
-                  mimeType: 'image/png',
-                ),
-              ),
-      ),
+      images: [
+        ...state.answers.images
+            .where((image) => image.type != TaskImageType.signature),
+        TaskImageModel(
+          type: TaskImageType.signature,
+          name: fileName,
+          file: XFile(
+            file.path,
+            name: fileName,
+            mimeType: 'image/png',
+          ),
+        ),
+      ],
     ));
   }
 
@@ -94,5 +110,45 @@ class TaskEmployeeBloc extends Cubit<TaskEmployeeState> {
       ),
       route: TaskRoutes.photos,
     ));
+  }
+
+  void updateImages(TaskImageModel? image) {
+    emit(
+      state.copyWith(
+        images: image != null
+            ? [
+                ...state.images.where((img) => img.type != image.type),
+                image,
+              ]
+            : state.images,
+      ),
+    );
+  }
+
+  void summaryRequested() {
+    emit(state.copyWith(route: TaskRoutes.summary));
+  }
+
+  void sendAnswers() async {
+    emit(state.copyWith(status: TaskEmployeeStatus.loading));
+    try {
+      await repository.saveTaskAnswers(
+        state.selectedTask?.id ?? '',
+        state.answers.copyWith(images: state.images),
+      );
+      emit(state.copyWith(
+        status: TaskEmployeeStatus.success,
+        selectedTask: state.selectedTask?.copyWith(
+          step: TaskStep.completed,
+        ),
+      ));
+    } catch (e) {
+      debugPrint('### error: $e');
+      emit(state.copyWith(status: TaskEmployeeStatus.error));
+    }
+  }
+
+  void clear() {
+    emit(const TaskEmployeeState());
   }
 }

@@ -8,13 +8,17 @@ import 'package:executive_gps/libs/utils/network_checker.dart';
 import 'package:executive_gps/libs/exceptions/generic_errors.dart';
 import 'package:executive_gps/libs/modules/tasks/models/task_model.dart';
 import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_answers_model.dart';
 
 abstract class TaskDatasource {
   Future<List<TaskModel>> getTasks(String? employeeId);
-  Future<void> addTask(TaskModel task);
-  Future<void> updateTask(TaskModel task);
+  Future<TaskModel> addTask(TaskModel task);
+  Future<TaskModel> updateTask(TaskModel task);
+  Future<void> saveTaskAnswers(String id, TaskAnswersModel answers);
   Future<void> deleteTask(String taskId);
   Future<void> clearTasks();
+  Future<TaskAnswersModel?> getAnswers(String taskId);
 }
 
 class TaskDatasourceImpl implements TaskDatasource {
@@ -59,27 +63,42 @@ class TaskDatasourceImpl implements TaskDatasource {
   }
 
   @override
-  Future<void> clearTasks() async {
-    hasMore = true;
-    _lastDocument = null;
-    _documents.clear();
-  }
-
-  @override
-  Future<void> addTask(TaskModel task) async {
-    await _safeCall(() async {
+  Future<TaskModel> addTask(TaskModel task) async {
+    return await _safeCall(() async {
+      final identifier = await db.collection('tasks').doc('identifier').get();
+      final newIdentifier = (identifier.data()?['data'] ?? 0);
+      await db
+          .collection('tasks')
+          .doc('identifier')
+          .set({'data': (identifier.data()?['data'] ?? 0) + 1});
+      final newTask = task.copyWith(
+        identifier:
+            '${(newIdentifier + 1).toString().padLeft(3, '0')}/${(DateTime.now().year % 100).toString().padLeft(2, '0')}',
+      );
       final tasksRef = db.collection('tasks');
       final novoUsuarioRef = tasksRef.doc();
-      await tasksRef.doc(novoUsuarioRef.id).set(task.toJson());
-      clearTasks();
+      await tasksRef.doc(novoUsuarioRef.id).set(newTask.toJson());
+      return newTask;
     });
   }
 
   @override
-  Future<void> updateTask(TaskModel task) async {
-    await _safeCall(() async {
+  Future<TaskModel> updateTask(TaskModel task) async {
+    return await _safeCall(() async {
       await db.collection('tasks').doc(task.id).update(task.toJson());
-      clearTasks();
+      return task;
+    });
+  }
+
+  @override
+  Future<void> saveTaskAnswers(String id, TaskAnswersModel answers) async {
+    await _safeCall(() async {
+      await db.collection('tasks').doc(id).update({'step': 'completed'});
+      final newImages = await saveImages(id, answers.images);
+      await db
+          .collection('task_answers')
+          .doc(id)
+          .set(answers.copyWith(images: newImages).toJson());
     });
   }
 
@@ -90,16 +109,16 @@ class TaskDatasourceImpl implements TaskDatasource {
     });
   }
 
-  Future<List<ImageModel>> saveImages(
-      String userId, List<ImageModel>? images) async {
+  Future<List<TaskImageModel>> saveImages(
+      String userId, List<TaskImageModel>? images) async {
     return await _safeCall(() async {
-      final imageModels = <ImageModel>[];
-      for (ImageModel image in images ?? []) {
-        final fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
-        final ref = storage.ref().child('tasks/$userId/$fileName');
+      final imageModels = <TaskImageModel>[];
+      for (TaskImageModel image in images ?? []) {
+        final ref = storage.ref().child('tasks/$userId/${image.name}');
         await ref.putData(await File(image.file?.path ?? '').readAsBytes());
         final url = await ref.getDownloadURL();
-        imageModels.add(ImageModel(url: url, name: fileName));
+        imageModels
+            .add(TaskImageModel(url: url, name: image.name, type: image.type));
       }
       return imageModels;
     });
@@ -111,6 +130,24 @@ class TaskDatasourceImpl implements TaskDatasource {
         final ref = storage.ref().child('tasks/$userId/${image.name}');
         await ref.delete();
       }
+    });
+  }
+
+  @override
+  Future<void> clearTasks() async {
+    hasMore = true;
+    _lastDocument = null;
+    _documents.clear();
+  }
+
+  @override
+  Future<TaskAnswersModel?> getAnswers(String userId) async {
+    return await _safeCall(() async {
+      final doc = await db.collection('task_answers').doc(userId).get();
+      if (doc.exists) {
+        return TaskAnswersModel.fromJson(doc.data() as Map<String, dynamic>);
+      }
+      return null;
     });
   }
 

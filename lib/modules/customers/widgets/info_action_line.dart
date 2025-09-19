@@ -26,6 +26,7 @@ class InfoAction extends StatelessWidget {
     this.icon = FeatherIcons.phoneCall,
     this.onTap,
     required this.value,
+    required Function() onPressed,
   });
 
   @override

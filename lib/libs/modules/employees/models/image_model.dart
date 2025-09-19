@@ -21,6 +21,18 @@ class ImageModel extends Equatable {
       _$ImageModelFromJson(json);
   Map<String, dynamic> toJson() => _$ImageModelToJson(this);
 
+  ImageModel copyWith({
+    String? url,
+    String? name,
+    XFile? file,
+  }) {
+    return ImageModel(
+      url: url ?? this.url,
+      name: name ?? this.name,
+      file: file ?? this.file,
+    );
+  }
+
   @override
   List<Object?> get props => [
         url,

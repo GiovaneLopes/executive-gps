@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:executive_gps/libs/modules/employees/models/image_model.dart';
+import 'package:executive_gps/libs/modules/tasks/models/task_image_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'task_answers_model.g.dart';
 
@@ -9,24 +9,14 @@ class TaskAnswersModel extends Equatable {
   final bool injectionLight;
   final String? km;
   final String? observation;
-  final ImageModel? signature;
-  final ImageModel? equipmentId;
-  final ImageModel? wiring;
-  final ImageModel? customerPlace;
-  final ImageModel? vehicleFront;
-  final ImageModel? additional;
+  final List<TaskImageModel> images;
 
   const TaskAnswersModel({
     this.checklist = const {},
     this.injectionLight = false,
     this.km,
     this.observation,
-    this.signature,
-    this.equipmentId,
-    this.wiring,
-    this.customerPlace,
-    this.vehicleFront,
-    this.additional,
+    this.images = const <TaskImageModel>[],
   });
 
   factory TaskAnswersModel.fromJson(Map<String, dynamic> json) =>
@@ -38,24 +28,14 @@ class TaskAnswersModel extends Equatable {
     bool? injectionLight,
     String? km,
     String? observation,
-    ImageModel? Function()? signature,
-    ImageModel? equipmentId,
-    ImageModel? wiring,
-    ImageModel? customerPlace,
-    ImageModel? vehicleFront,
-    ImageModel? additional,
+    List<TaskImageModel>? images,
   }) {
     return TaskAnswersModel(
       checklist: checklist ?? this.checklist,
       injectionLight: injectionLight ?? this.injectionLight,
       km: km ?? this.km,
       observation: observation ?? this.observation,
-      signature: signature != null ? signature() : this.signature,
-      equipmentId: equipmentId ?? this.equipmentId,
-      wiring: wiring ?? this.wiring,
-      customerPlace: customerPlace ?? this.customerPlace,
-      vehicleFront: vehicleFront ?? this.vehicleFront,
-      additional: additional ?? this.additional,
+      images: images ?? this.images,
     );
   }
 
@@ -65,11 +45,6 @@ class TaskAnswersModel extends Equatable {
         injectionLight,
         km,
         observation,
-        signature,
-        equipmentId,
-        wiring,
-        customerPlace,
-        vehicleFront,
-        additional,
+        images,
       ];
 }
