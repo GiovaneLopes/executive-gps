@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
@@ -25,16 +28,22 @@ enum EmployeeStatus {
   addressLoaded,
 }
 
-class EmployeeBloc extends Cubit<EmployeeState> {
+class EmployeeBloc extends Cubit<EmployeeState> implements Disposable {
   final AddressRepository addressRepository;
   final EmployeeRepository employeeRepository;
   final AuthBloc authBloc;
+
+  late StreamSubscription authSubscription;
   EmployeeBloc(
     this.addressRepository,
     this.employeeRepository,
     this.authBloc,
   ) : super(const EmployeeState()) {
-    init();
+    authSubscription = authBloc.stream.listen((state) {
+      if (state.status == AuthStatus.authenticated) {
+        init();
+      }
+    });
   }
 
   void init() {
@@ -199,5 +208,11 @@ class EmployeeBloc extends Cubit<EmployeeState> {
         error: e as AppError,
       ));
     }
+  }
+
+  @override
+  void dispose() {
+    authSubscription.cancel();
+    super.close();
   }
 }

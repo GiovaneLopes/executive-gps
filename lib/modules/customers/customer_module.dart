@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/auth/auth_module.dart';
 import 'package:executive_gps/modules/customers/customer_routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:executive_gps/modules/customers/pages/add_customer.dart';
@@ -16,6 +17,11 @@ class CustomerModule extends Module {
     i.addLazySingleton<CustomerRepository>(CustomerRepositoryImpl.new);
     i.addSingleton(CustomerBloc.new);
   }
+
+  @override
+  List<Module> get imports => [
+        AuthModule(),
+      ];
 
   @override
   void routes(r) {

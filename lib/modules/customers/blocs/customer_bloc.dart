@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:executive_gps/modules/auth/blocs/auth_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:executive_gps/libs/exceptions/app_error.dart';
 import 'package:executive_gps/libs/exceptions/generic_errors.dart';
@@ -24,14 +28,22 @@ enum CustomerStatus {
   addressLoaded,
 }
 
-class CustomerBloc extends Cubit<CustomerState> {
+class CustomerBloc extends Cubit<CustomerState> implements Disposable {
   final AddressRepository addressRepository;
   final CustomerRepository customerRepository;
+  final AuthBloc authBloc;
+
+  late StreamSubscription authSubscription;
   CustomerBloc(
     this.addressRepository,
     this.customerRepository,
+    this.authBloc,
   ) : super(const CustomerState()) {
-    getCustomers();
+    authSubscription = authBloc.stream.listen((state) {
+      if (state.status == AuthStatus.authenticated) {
+        getCustomers();
+      }
+    });
   }
 
   void getCustomers() async {
@@ -183,5 +195,11 @@ class CustomerBloc extends Cubit<CustomerState> {
         error: e as AppError,
       ));
     }
+  }
+
+  @override
+  void dispose() {
+    authSubscription.cancel();
+    super.close();
   }
 }
