@@ -58,118 +58,114 @@ class _TasksContentState extends State<TasksContent> {
     return BlocBuilder<TaskBloc, TaskState>(
       bloc: bloc,
       builder: (context, state) {
-        return Container(
-          color: AppColors.greyBackground,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-                decoration: const BoxDecoration(color: AppColors.primary),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Atividades',
-                        style:
-                            Styles.bodyMedium.copyWith(color: AppColors.black),
-                      ),
+        return Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+              decoration: const BoxDecoration(color: AppColors.primary),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Atividades',
+                      style: Styles.bodyMedium.copyWith(color: AppColors.black),
                     ),
-                    InkWell(
-                      onTap: bloc.toggleView,
-                      child: Icon(
-                        state.viewMode ? FeatherIcons.grid : FeatherIcons.list,
-                        size: 20.w,
+                  ),
+                  InkWell(
+                    onTap: bloc.toggleView,
+                    child: Icon(
+                      state.viewMode ? FeatherIcons.grid : FeatherIcons.list,
+                      size: 20.w,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (state.status == TaskStatus.loading && state.tasks.isEmpty)
+              const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
+                  ),
+                ),
+              )
+            else if (state.tasks.isEmpty)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      FeatherIcons.list,
+                      color: AppColors.black,
+                    ),
+                    Text(
+                      'Nenhuma atividade por aqui.',
+                      style: Styles.bodySmall,
+                    ),
+                  ],
+                ),
+              )
+            else
+              Expanded(
+                child: Column(
+                  children: [
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: List.generate(
+                            FilterType.values.length,
+                            (index) => Padding(
+                              padding: EdgeInsets.only(right: 12.w),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w, vertical: 6.h),
+                                  backgroundColor:
+                                      state.filter == FilterType.values[index]
+                                          ? AppColors.primary
+                                          : Colors.transparent,
+                                ),
+                                onPressed: () =>
+                                    bloc.selectFilter(FilterType.values[index]),
+                                child: Text(
+                                  FilterType.values[index].name,
+                                  style: Styles.bodySmall,
+                                ),
+                              ),
+                            ),
+                          ).toList()),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: state.orderTasks.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index < state.orderTasks.length) {
+                            return state.viewMode
+                                ? TaskExpansionTile(
+                                    task: state.orderTasks[index],
+                                  )
+                                : TaskCard(
+                                    task: state.orderTasks[index],
+                                  );
+                          } else {
+                            return state.hasMore && state.filter == null
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primary,
+                                    ),
+                                  )
+                                : const SizedBox.shrink();
+                          }
+                        },
                       ),
                     ),
                   ],
                 ),
               ),
-              if (state.status == TaskStatus.loading && state.tasks.isEmpty)
-                const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primary,
-                    ),
-                  ),
-                )
-              else if (state.tasks.isEmpty)
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        FeatherIcons.list,
-                        color: AppColors.black,
-                      ),
-                      Text(
-                        'Nenhuma atividade por aqui.',
-                        style: Styles.bodySmall,
-                      ),
-                    ],
-                  ),
-                )
-              else
-                Expanded(
-                  child: Column(
-                    children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: List.generate(
-                              FilterType.values.length,
-                              (index) => Padding(
-                                padding: EdgeInsets.only(right: 12.w),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 12.w, vertical: 6.h),
-                                    backgroundColor:
-                                        state.filter == FilterType.values[index]
-                                            ? AppColors.primary
-                                            : Colors.transparent,
-                                  ),
-                                  onPressed: () => bloc
-                                      .selectFilter(FilterType.values[index]),
-                                  child: Text(
-                                    FilterType.values[index].name,
-                                    style: Styles.bodySmall,
-                                  ),
-                                ),
-                              ),
-                            ).toList()),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          itemCount: state.orderTasks.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index < state.orderTasks.length) {
-                              return state.viewMode
-                                  ? TaskExpansionTile(
-                                      task: state.orderTasks[index],
-                                    )
-                                  : TaskCard(
-                                      task: state.orderTasks[index],
-                                    );
-                            } else {
-                              return state.hasMore && state.filter == null
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.primary,
-                                      ),
-                                    )
-                                  : const SizedBox.shrink();
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
+          ],
         );
       },
     );
