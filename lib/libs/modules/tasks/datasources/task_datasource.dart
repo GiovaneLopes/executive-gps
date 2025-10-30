@@ -93,12 +93,12 @@ class TaskDatasourceImpl implements TaskDatasource {
   @override
   Future<void> saveTaskAnswers(String id, TaskAnswersModel answers) async {
     await _safeCall(() async {
-      await db.collection('tasks').doc(id).update({'step': 'completed'});
       final newImages = await saveImages(id, answers.images);
       await db
           .collection('task_answers')
           .doc(id)
           .set(answers.copyWith(images: newImages).toJson());
+      await db.collection('tasks').doc(id).update({'step': 'completed'});
     });
   }
 
