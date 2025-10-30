@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:536161130967:android:a72cb25fc8f6f0957dd392",
+        "mobilesdk_app_id": "1:536161130967:android:d5a426c08bd5f7427dd392",
         "android_client_info": {
-          "package_name": "com.example.executive_gps.dev"
+          "package_name": "br.com.executivegpsapp.dev"
         }
       },
       "oauth_client": [],

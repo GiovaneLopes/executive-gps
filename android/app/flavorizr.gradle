@@ -4,12 +4,12 @@ android {
     productFlavors {
         dev {
             dimension "flavor-type"
-            applicationId "com.example.executive_gps.dev"
+            applicationId "br.com.executivegpsapp.dev"
             resValue "string", "app_name", "Dev Executive Gps"
         }
         prod {
             dimension "flavor-type"
-            applicationId "com.example.executive_gps.prod"
+            applicationId "br.com.executivegpsapp"
             resValue "string", "app_name", "Executive Gps"
         }
     }

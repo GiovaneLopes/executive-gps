@@ -24,6 +24,10 @@
     <string>$(FLUTTER_BUILD_NUMBER)</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    <key>NSCameraUsageDescription</key>
+    <string>Precisamos de acesso à câmera para tirar fotos para salvar documentos de clientes e colaboradores</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Precisamos de acesso à biblioteca de fotos para selecionar imagens e salvar documentos de clientes e colaboradores</string>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
     <key>UIMainStoryboardFile</key>

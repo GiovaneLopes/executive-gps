@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "648397175808",
-    "project_id": "executive-gps-prod",
-    "storage_bucket": "executive-gps-prod.firebasestorage.app"
+    "project_number": "604118664223",
+    "project_id": "executive-gps-prod-a5f13",
+    "storage_bucket": "executive-gps-prod-a5f13.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:648397175808:android:87f48ade737ba931542ce5",
+        "mobilesdk_app_id": "1:604118664223:android:13dc0e5ab9bd0bfdbbc12a",
         "android_client_info": {
-          "package_name": "com.example.executive_gps"
+          "package_name": "br.com.executivegpsapp"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBsjs3vROgE-79PeDcAl7UFYhWbi-AyHXg"
+          "current_key": "AIzaSyD17q685gIFsKECW-R23i__9tf9lxekIi0"
         }
       ],
       "services": {

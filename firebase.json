@@ -3,22 +3,22 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "executive-gps-prod",
+          "projectId": "executive-gps-prod-a5f13",
           "appId": "1:648397175808:android:87f48ade737ba931542ce5",
-          "fileOutput": "android/app/google-services.json"
+          "fileOutput": ".firebase/flavors/dev/google-services.json"
         }
       },
       "ios": {
         "default": {
-          "projectId": "executive-gps-prod",
+          "projectId": "executive-gps-prod-a5f13",
           "appId": "1:648397175808:ios:a6adda556b60a4cf542ce5",
           "uploadDebugSymbols": false,
-          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+          "fileOutput": "ios/Runner/prod/GoogleService-Info.plist"
         }
       },
       "dart": {
-        "lib/firebase_options.dart": {
-          "projectId": "executive-gps-prod",
+        "lib/firebase_options_prod.dart": {
+          "projectId": "executive-gps-prod-a5f13",
           "configurations": {
             "android": "1:648397175808:android:87f48ade737ba931542ce5",
             "ios": "1:648397175808:ios:a6adda556b60a4cf542ce5"
@@ -29,7 +29,6 @@
   },
   "functions": [
     {
-      "source": "functions",
       "codebase": "default",
       "ignore": [
         "node_modules",
@@ -38,10 +37,7 @@
         "firebase-debug.*.log",
         "*.local"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
+      "source": "functions"
     }
   ],
   "emulators": {

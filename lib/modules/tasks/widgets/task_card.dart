@@ -1,5 +1,6 @@
 import 'package:executive_gps/modules/customers/widgets/info_line.dart';
 import 'package:executive_gps/modules/shared/utils/contact_helper.dart';
+import 'package:executive_gps/modules/shared/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,7 +71,8 @@ class TaskCard extends StatelessWidget {
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
-                          task.customer?.name ?? 'Cliente não informado',
+                          task.customer?.name.capitalize() ??
+                              'Cliente não informado',
                           style: Styles.bodySmall
                               .copyWith(fontWeight: FontWeight.w500),
                         ),

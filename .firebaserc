@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "executive-gps-dev"
-  }
+    "prod": "executive-gps-prod-a5f13",
+    "default": "executive-gps-prod-a5f13"
+  },
+  "targets": {},
+  "etags": {}
 }

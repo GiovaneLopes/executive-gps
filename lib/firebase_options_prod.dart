@@ -27,21 +27,7 @@ class DefaultFirebaseOptions {
         return android;
       case TargetPlatform.iOS:
         return ios;
-      case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
-      case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -50,19 +36,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBsjs3vROgE-79PeDcAl7UFYhWbi-AyHXg',
-    appId: '1:648397175808:android:87f48ade737ba931542ce5',
-    messagingSenderId: '648397175808',
-    projectId: 'executive-gps-prod',
-    storageBucket: 'executive-gps-prod.firebasestorage.app',
+    apiKey: 'AIzaSyD17q685gIFsKECW-R23i__9tf9lxekIi0',
+    appId: '1:604118664223:android:13dc0e5ab9bd0bfdbbc12a',
+    messagingSenderId: '604118664223',
+    projectId: 'executive-gps-prod-a5f13',
+    storageBucket: 'executive-gps-prod-a5f13.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCtPYRq8xunQNfUkQWc6AxLXZYmkjgU_Hs',
-    appId: '1:648397175808:ios:a6adda556b60a4cf542ce5',
-    messagingSenderId: '648397175808',
-    projectId: 'executive-gps-prod',
-    storageBucket: 'executive-gps-prod.firebasestorage.app',
-    iosBundleId: 'com.example.executiveGps',
+    apiKey: 'AIzaSyCBEXYDDDBxzGa-KAeypFJSe2ajcWhsI-o',
+    appId: '1:604118664223:ios:574f8eacc3a7e8fabbc12a',
+    messagingSenderId: '604118664223',
+    projectId: 'executive-gps-prod-a5f13',
+    storageBucket: 'executive-gps-prod-a5f13.firebasestorage.app',
+    iosBundleId: 'br.com.executivegpsapp',
   );
 }

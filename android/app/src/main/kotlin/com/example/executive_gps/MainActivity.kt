@@ -1,4 +1,4 @@
-package com.example.executive_gps
+package br.com.executivegpsapp
 
 import io.flutter.embedding.android.FlutterActivity
 

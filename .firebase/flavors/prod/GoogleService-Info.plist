@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCtPYRq8xunQNfUkQWc6AxLXZYmkjgU_Hs</string>
+	<string>AIzaSyCBEXYDDDBxzGa-KAeypFJSe2ajcWhsI-o</string>
 	<key>GCM_SENDER_ID</key>
-	<string>648397175808</string>
+	<string>604118664223</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.executiveGps</string>
+	<string>br.com.executivegpsapp</string>
 	<key>PROJECT_ID</key>
-	<string>executive-gps-prod</string>
+	<string>executive-gps-prod-a5f13</string>
 	<key>STORAGE_BUCKET</key>
-	<string>executive-gps-prod.firebasestorage.app</string>
+	<string>executive-gps-prod-a5f13.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,35 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:648397175808:ios:a6adda556b60a4cf542ce5</string>
+	<string>1:604118664223:ios:dec35a196e0bb828bbc12a</string>
+</dict>
+</plist><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCBEXYDDDBxzGa-KAeypFJSe2ajcWhsI-o</string>
+	<key>GCM_SENDER_ID</key>
+	<string>604118664223</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>br.com.executivegpsapp</string>
+	<key>PROJECT_ID</key>
+	<string>executive-gps-prod-a5f13</string>
+	<key>STORAGE_BUCKET</key>
+	<string>executive-gps-prod-a5f13.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:604118664223:ios:dec35a196e0bb828bbc12a</string>
 </dict>
 </plist>

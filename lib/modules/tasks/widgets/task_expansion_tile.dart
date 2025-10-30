@@ -1,5 +1,6 @@
 import 'package:executive_gps/modules/customers/widgets/info_line.dart';
 import 'package:executive_gps/modules/shared/utils/contact_helper.dart';
+import 'package:executive_gps/modules/shared/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,7 +43,8 @@ class TaskExpansionTile extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        task.customer?.name ?? 'Cliente não informado',
+                        task.customer?.name.capitalize() ??
+                            'Cliente não informado',
                         maxLines: 1,
                         style: Styles.bodySmall,
                       ),

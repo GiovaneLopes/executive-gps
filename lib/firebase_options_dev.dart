@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAxTGUT_-oXDVNDzDoqw988G41lBQbc-WY',
-    appId: '1:536161130967:android:8d6a227c01f7c0597dd392',
+    appId: '1:536161130967:android:d5a426c08bd5f7427dd392',
     messagingSenderId: '536161130967',
     projectId: 'executive-gps-dev',
     storageBucket: 'executive-gps-dev.firebasestorage.app',
@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '536161130967',
     projectId: 'executive-gps-dev',
     storageBucket: 'executive-gps-dev.firebasestorage.app',
-    iosBundleId: 'com.example.executiveGps',
+    iosBundleId: 'br.com.executivegpsapp.dev',
   );
 }

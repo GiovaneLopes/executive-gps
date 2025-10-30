@@ -1,3 +1,4 @@
+import 'package:executive_gps/modules/shared/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -49,11 +50,11 @@ class HomeDrawer extends StatelessWidget {
                                 bloc: Modular.get<AuthBloc>(),
                                 builder: (context, state) {
                                   return AutoSizeText(
-                                    'Olá, ${state.user?.name ?? 'Usuário'}',
+                                    'Olá, ${state.user?.name.capitalize() ?? 'Usuário'}',
                                     minFontSize: 6,
                                     maxLines: 1,
                                     style: Styles.body.copyWith(
-                                      color: AppColors.black,   
+                                      color: AppColors.black,
                                     ),
                                   );
                                 }),

@@ -1,4 +1,5 @@
 import 'package:executive_gps/modules/shared/utils/contact_helper.dart';
+import 'package:executive_gps/modules/shared/utils/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +32,7 @@ class EmployeeTile extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              employee.name,
+              employee.name.capitalize(),
               maxLines: 2,
               style: Styles.bodySmall.copyWith(
                 overflow: TextOverflow.ellipsis,
